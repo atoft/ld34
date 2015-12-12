@@ -15,7 +15,10 @@
 </head>
 <body>
   <canvas id="gameCanvas" width="640" height="360"></canvas>
-
+  
+  
+  <script type="text/javascript" src="js/MoveableEntity.js"></script>
+  <script type="text/javascript" src="js/Player.js"></script>
   <script type="text/javascript" src="js/buckets.js"></script> <!--Data structure lib -->
   <script>
     console.log("Initializing...");
@@ -38,10 +41,11 @@
     var time;
     var dt;
 
-    //Physics
-    var gravity = 0.005;
-    var terminal = 0.5; 
-     
+
+    //World
+    var entities = new buckets.LinkedList();
+    entities.add( new Player(320, 240, 1) );
+         
     /*Screen functions*/               
     function drawFps() {
       ctx.font = "16px Roboto";
@@ -62,6 +66,14 @@
       ctx.clearRect(0,0,canvas.width,canvas.height);
     
       drawFps();
+      
+      entities.forEach(function(element) {
+        element.update();
+      });
+      
+      entities.forEach(function(element) {
+        element.draw();
+      });
       
     }
     
