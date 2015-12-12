@@ -8,9 +8,10 @@ To do list:
 - ~~Add lasers to entity list and have them move~~
 - Implement the two button control scheme (mouse buttons)
 - ~~Add asteroid destruction~~
-- Refactor main game code
-  - Add game over screen
+- ~~Refactor main game code~~
+  - ~~Add game over screen~~
   - Add loading screen / main menu
+- Improve player hit detection
 - Add pickups / win state
 - Add sprites
 
