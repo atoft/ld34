@@ -3,13 +3,13 @@
  */
  
 //The origin of the world is the top-left corner of the "map"
-var WORLD_WIDTH = 5000;
-var WORLD_HEIGHT = 5000;
+var WORLD_WIDTH  = 10000;
+var WORLD_HEIGHT = 10000;
     
 var SPAWN_POSX = WORLD_WIDTH/2;
 var SPAWN_POSY = WORLD_HEIGHT/2;
     
-var NUM_ASTEROIDS = 40;
+var NUM_ASTEROIDS = 160;
 var ASTEROID_HEALTH = 3;
 var ASTEROID_INVULNERABLE_TIMEOUT = 2.5;
 var LASER_LIFETIME = 5;

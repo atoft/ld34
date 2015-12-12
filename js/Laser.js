@@ -51,17 +51,17 @@ Laser.prototype.collisionTest = function() {
   for(i=0; i<entities.size();i++) {
     var element = entities.elementAtIndex(i);
     //Collision of line segment with rectangle, treat as 4 line intersections
-    p0X = element.posX - element.width/2;
-    p0Y = element.posY - element.height/2;
+    p0X = element.posX - Math.cos(element.angle)*element.width/2 + Math.sin(element.angle)*element.height/2;
+    p0Y = element.posY - Math.cos(element.angle)*element.height/2 - Math.sin(element.angle)*element.width/2;
     
-    p1X = element.posX + element.width/2;
-    p1Y = element.posY - element.height/2;
+    p1X = element.posX - Math.cos(element.angle)*element.width/2 - Math.sin(element.angle)*element.height/2;
+    p1Y = element.posY - Math.cos(element.angle)*element.height/2 + Math.sin(element.angle)*element.width/2;
     
-    p2X = element.posX + element.width/2;
-    p2Y = element.posY + element.height/2;
+    p2X = element.posX + Math.cos(element.angle)*element.width/2 - Math.sin(element.angle)*element.height/2;
+    p2Y = element.posY + Math.cos(element.angle)*element.height/2 + Math.sin(element.angle)*element.width/2;
     
-    p3X = element.posX - element.width/2;
-    p3Y = element.posY + element.height/2;
+    p3X = element.posX + Math.cos(element.angle)*element.width/2 + Math.sin(element.angle)*element.height/2;
+    p3Y = element.posY + Math.cos(element.angle)*element.height/2 - Math.sin(element.angle)*element.width/2;
     
     if( intersects(this.startX, this.startY, this.endX, this.endY,
                    p0X, p0Y, p1X, p1Y) || 
