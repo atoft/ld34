@@ -78,13 +78,13 @@ Player.prototype.update = function() {
 
 Player.prototype.draw = function() {
   ctx.save();
-  ctx.translate((this.posX-this.width/2 -camX)*screenScale, 
-                (this.posY-this.height/2 -camY)*screenScale);
+  ctx.translate((this.posX-this.width/2 -camX), 
+                (this.posY-this.height/2 -camY));
   ctx.rotate(this.angle);
 
   ctx.beginPath();
-  ctx.rect(-this.width*screenScale/2, -this.height/screenScale/2, 
-            this.width*screenScale, this.height*screenScale);
+  ctx.rect(-this.width/2, -this.height/2, 
+            this.width, this.height);
   ctx.fillStyle = "blue";
   ctx.fill();
   ctx.closePath();

@@ -28,13 +28,13 @@ Asteroid.prototype.update = function() {
 //Asteroids are drawn at their drift angle, rather than their angle of movement
 Asteroid.prototype.draw = function() {
   ctx.save();
-  ctx.translate((this.posX-this.width/2-camX)*screenScale, 
-                (this.posY-this.height/2-camY)*screenScale);
+  ctx.translate((this.posX-this.width/2-camX), 
+                (this.posY-this.height/2-camY));
   ctx.rotate(this.driftAngle);
 
   ctx.beginPath();
-  ctx.rect(-this.width*screenScale/2, -this.height/screenScale/2, 
-            this.width*screenScale, this.height*screenScale);
+  ctx.rect(-this.width/2, -this.height/2, 
+            this.width, this.height);
   ctx.fillStyle = "red";
   ctx.fill();
   ctx.closePath();

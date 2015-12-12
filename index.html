@@ -26,15 +26,19 @@
   <script>
     console.log("Initializing...");
     
+    //Amount to scale rendering from the "actual" resolution
+    var screenScale = 1;
+    
     /*Get a reference to the HTML canvas and a 2D rendering context*/
     var canvas = document.getElementById("gameCanvas");
     var ctx = canvas.getContext("2d");
-    
-    //Amount to scale rendering from the "actual" resolution
-    var screenScale = 1;
-         
+    ctx.imageSmoothingEnabled = false; //Display pixellated images
+    ctx.scale(screenScale,screenScale);
+             
     /*Global variavles*/
     var PARALLAX_SCALE = 4;
+    var PX_WIDTH = 640;
+    var PX_HEIGHT = 360;
     
     //The origin of the world is the top-left corner of the "map"
     var WORLD_WIDTH = 5000;
@@ -95,11 +99,11 @@
       time = now; 
       
       //Reposition the camera
-      camX = player.posX -canvas.width/2 -player.width/2;
-      camY = player.posY -canvas.height/2 -player.height/2;
+      camX = player.posX -PX_WIDTH/2 -player.width/2;
+      camY = player.posY -PX_HEIGHT/2 -player.height/2;
     
       //Wipe the screen
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
     
 
       
@@ -114,7 +118,7 @@
       ctx.fillStyle = bg;
       ctx.save();
       ctx.translate(-camX/PARALLAX_SCALE,-camY/PARALLAX_SCALE);
-      ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,canvas.width,canvas.height);
+      ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,PX_WIDTH,PX_HEIGHT);
       ctx.restore();
       
       drawDebugInfo();
