@@ -28,11 +28,18 @@ var camY = 0;
     
 var entities;
 var player;
+
+var gameOver;
+var victory;
+
+
     
 var Engine = function() {
   entities = new buckets.LinkedList();
   player = new Player(SPAWN_POSX, SPAWN_POSY, 0.5);
   entities.add( player );
+  
+
     
   for(i=0;i<NUM_ASTEROIDS;i++) {
     console.log("Created asteroid "+i);
@@ -50,23 +57,47 @@ var Engine = function() {
 }
 
 
-/*Screen functions*/               
+/*Screen functions*/           
 function _drawDebugInfo() {
-  ctx.font = "16px Roboto";
+  ctx.font = "16px Pixel";
   ctx.fillStyle = "#0095dd";
   ctx.fillText("FPS: "+Math.round(1000/dt)+"     Player: ("+
                Math.round(player.posX)+", "+
                Math.round(player.posY)+")", 100, 20);
 }
 function _drawStats() {
-  ctx.font = "16px Roboto";
+  ctx.font = "16px Pixel";
   ctx.fillStyle = "#ff0000";
   ctx.fillText("Health: "+player.health+"  Invincible: "+player.invulnerabilityTimer, 100, 40);
+}
+function _gameOver() {
+  if(lmbPressed) {
+    gameOver = false;
+    new Engine();
+  }
+  else requestAnimationFrame(_gameOver);
+  ctx.beginPath();
+  ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = "yellow";
+  ctx.fill();
+  ctx.stroke();
+  ctx.closePath();
+  
+  ctx.fillStyle = "yellow";
+  ctx.font = "16px Pixel";
+  ctx.fillText("GAME OVER!",PX_WIDTH/2-180,PX_HEIGHT/2-70);
+  ctx.fillText("The Empire is",PX_WIDTH/2-180,PX_HEIGHT/2-40);
+  ctx.fillText("victorious.",PX_WIDTH/2-180,PX_HEIGHT/2-10);
+  ctx.fillText("Click to retry",PX_WIDTH/2-180,PX_HEIGHT/2+50);
+  
 }
     
 /*Main game*/
 function _draw() {
-  requestAnimationFrame(_draw);
+  if(gameOver) _gameOver();
+  //else if(victory) _victory();
+  else requestAnimationFrame(_draw);
       
   //Calculate the amount, dt, to advance the simulation by
   var now = new Date().getTime();
@@ -84,6 +115,7 @@ function _draw() {
   entities.forEach(function(element) {
     element.update();
   });
+  
       
   //Draw the background
   //TODO: Move somewhere else
@@ -101,6 +133,7 @@ function _draw() {
   entities.forEach(function(element) {
     element.draw();
   });
+
 }
 
 

@@ -6,6 +6,10 @@
     * {
       padding: 0; margin:0;
     }
+    @font-face {
+    font-family: Pixel;
+    src: url('font/prstartk.ttf');
+    }
     canvas {
       background: #eee;
       display: block;
@@ -47,6 +51,7 @@
     var leftPressed = false;
     var spacePressed = false;
     var upPressed = false;
+    var lmbPressed = false;
         
     //Timing
     var time;
@@ -56,6 +61,8 @@
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     //document.addEventListener("mousemove", mouseMoveHandler, false);
+    window.addEventListener("mousedown", mouseDownHandler, false);
+    window.addEventListener("mouseup", mouseUpHandler, false);
     
     function keyDownHandler(e) {
       if(e.keyCode == 39) {
@@ -85,14 +92,24 @@
         spacePressed = false;
       }
     }
+    function mouseDownHandler(e) {
+      x = event.pageX - canvas.offsetLeft;
+      y = event.pageY - canvas.offsetTop;
+      lmbPressed = true;
+    }
+    function mouseUpHandler(e) {
+      lmbPressed = false;
+    }
 
     console.log("Loading assets");
     var loader = new PxLoader();
     var imgStarscape = loader.addImage("img/stars.png");
     var imgShip      = loader.addImage("img/ship.png");
     var imgShipFly   = loader.addImage("img/ship_fly.png");
+    var imgCoin      = loader.addImage("img/coin-sprite-animation.png");
     
     loader.addCompletionListener(function() {
+
       console.log("Starting game loop...");
       new Engine();
     });

@@ -18,6 +18,11 @@ Player.prototype = Object.create(MoveableEntity.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+  if(this.health<=0) {
+    //Display a death animation
+    gameOver = true;
+  }
+
   if(leftPressed) {
     this.angle -= 5 *2*Math.PI/360;
   }
