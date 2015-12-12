@@ -11,6 +11,7 @@ To do list:
 - Add game over screen
 - Add loading screen / main menu
 - Add pickups / win state
+- Add sprites
 
 Optional:
 - Add enemy ship type
