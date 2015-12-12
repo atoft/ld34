@@ -36,7 +36,12 @@
     /*Global variavles*/
     var PARALLAX_SCALE = 4;
     
+    //The origin of the world is the top-left corner of the "map"
+    var WORLD_WIDTH = 1000;
+    var WORLD_HEIGHT = 1000;
     
+    var SPAWN_POSX = 80;
+    var SPAWN_POSY = 0;
     
     //Inputs
     var rightPressed = false;
@@ -53,9 +58,10 @@
 
     //World
     var entities = new buckets.LinkedList();
-    var player = new Player(320, 240, 0.5);
+    var player = new Player(SPAWN_POSX, SPAWN_POSY, 0.5);
     entities.add( player );
-    entities.add( new Asteroid(100, 100, 40,60,0.1,Math.PI*0.75, 0.5*2*Math.PI/360) );
+    entities.add( new Asteroid(SPAWN_POSX - 100, SPAWN_POSY -100, 
+                  40,60,0.1,Math.PI*0.75, 0.5*2*Math.PI/360) );
          
     /*Screen functions*/               
     function drawFps() {
@@ -74,14 +80,15 @@
       time = now; 
       
       //Reposition the camera
-      camX = player.posX-320;
-      camY = player.posY-240;
+      camX = player.posX -canvas.width/2 -player.width/2;
+      camY = player.posY -canvas.height/2 -player.height/2;
+      console.log("camera x "+camX+" y "+camY);
+      console.log("player x "+player.posX+" y "+player.posY);
     
       //Wipe the screen
       ctx.clearRect(0,0,canvas.width,canvas.height);
     
-      drawFps();
-      
+
       
       //Update every entity
       entities.forEach(function(element) {
@@ -96,6 +103,9 @@
       ctx.translate(-camX/PARALLAX_SCALE,-camY/PARALLAX_SCALE);
       ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,canvas.width,canvas.height);
       ctx.restore();
+      
+      drawFps();
+      
       
       //Draw every entity
       entities.forEach(function(element) {
