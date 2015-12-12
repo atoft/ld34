@@ -19,8 +19,9 @@ Asteroid.prototype.update = function() {
   if(this.driftAngle > 2*Math.PI) this.driftAngle -= 2*Math.PI;
   else if (this.driftAngle < 0) this.driftAngle += 2*Math.PI;
   
+  //TODO: Should asteroids collide with one another?
   
-  //Call the parent function to calculate collisions
+  //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
 }
 

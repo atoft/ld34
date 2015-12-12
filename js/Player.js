@@ -28,7 +28,51 @@ Player.prototype.update = function() {
   
   if(this.angle > 2*Math.PI) this.angle -= 2*Math.PI;
   else if (this.angle < 0) this.angle += 2*Math.PI;
-  //Call the parent function to calculate collisions
+  
+  //Do collision with other objects
+  //TODO: Currently don't account for rotation
+  for(i=0; i<entities.size();i++) {
+    var element = entities.elementAtIndex(i);
+    if(element == this) continue;
+    
+    if((this.posX + this.width/4 >= element.posX - element.width/2)
+        && (this.posX - this.width/4 <= element.posX + element.width/2 )) {
+      if(this.posY + this.height/2 >= element.posY - element.height/2
+         && this.posY + this.height/2 <= element.posY + element.height/2) {
+        if(!this.collide) {   
+          this.collide = true;
+          //this.posY= -this.height/2 + element.posY - element.height/2;
+        }
+      }
+      if(this.posY - this.height/2 <= element.posY + element.height/2 
+         && this.posY - this.height/2 >= element.posY - element.height/2 ) {
+        if(!this.collide) {
+          this.collide = true;
+          //this.posY= this.height/2 + element.posY + element.height/2;
+        }
+      }
+    }
+    
+    if((this.posY + this.height/4 >= element.posY - element.height/2)
+        && (this.posY - this.height/4 <= element.posY + element.height/2 )) {
+      if(this.posX + this.width/2 >= element.posX - element.width/2
+         && this.posX + this.width/2 <= element.posX + element.width/2) {
+        if(!this.collide) {
+          this.collide = true;
+          //this.posX= -this.width/2 + element.posX - element.width/2;
+        }
+      }
+      if(this.posX - this.width/2 <= element.posX + element.width/2 
+         && this.posX - this.width/2 >= element.posX - element.width/2 ) {
+        if(!this.collide) {
+          this.collide = true;
+          //this.posX= this.width/2 + element.posX + element.width/2;
+        }
+      }
+    }
+  }
+  if(this.collide) console.log("Player collision");
+  //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
 }
 
