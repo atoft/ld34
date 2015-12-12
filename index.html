@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ludum Dare 34</title>
+  <style>
+    * {
+      padding: 0; margin:0;
+    }
+    canvas {
+      background: #eee;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="640" height="360"></canvas>
+
+  <script type="text/javascript" src="js/buckets.js"></script> <!--Data structure lib -->
+  <script>
+    console.log("Initializing...");
+    
+    /*Get a reference to the HTML canvas and a 2D rendering context*/
+    var canvas = document.getElementById("gameCanvas");
+    var ctx = canvas.getContext("2d");
+    
+    //Amount to scale rendering from the "actual" resolution
+    var screenScale = 1;
+         
+    /*Global variavles*/
+    
+    //Inputs
+    var rightPressed = false;
+    var leftPressed = false;
+    var spacePressed = false;
+        
+    //Timing
+    var time;
+    var dt;
+
+    //Physics
+    var gravity = 0.005;
+    var terminal = 0.5; 
+     
+    /*Screen functions*/               
+    function drawFps() {
+      ctx.font = "16px Roboto";
+      ctx.fillStyle = "#0095dd";
+      ctx.fillText("FPS: "+Math.round(1000/dt), 100, 20);
+    }
+    
+    /*Main game*/
+    function draw() {
+      requestAnimationFrame(draw);
+      
+      //Calculate the amount, dt, to advance the simulation by
+      var now = new Date().getTime();
+      dt = now - (time || now);
+      time = now; 
+    
+      //Wipe the screen
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+      drawFps();
+      
+    }
+    
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+    //document.addEventListener("mousemove", mouseMoveHandler, false);
+    
+    function keyDownHandler(e) {
+      if(e.keyCode == 39) {
+        rightPressed = true;
+      }
+      else if(e.keyCode == 37) {
+        leftPressed = true;
+      }
+      else if(e.keyCode == 32) {
+        spacePressed = true;
+      }
+    }
+    function keyUpHandler(e) {
+      if(e.keyCode == 39) {
+        rightPressed = false;
+      }
+      else if(e.keyCode == 37) {
+        leftPressed = false;
+      }
+      else if(e.keyCode == 32) {
+        spacePressed = false;
+      }
+    }
+
+    console.log("Starting game loop...");
+    draw();
+  </script>
+</body>
+</html>
