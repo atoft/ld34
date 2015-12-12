@@ -11,7 +11,8 @@ To do list:
 - ~~Refactor main game code~~
   - ~~Add game over screen~~
   - Add loading screen / main menu
-- Improve player hit detection
+- ~~Improve player hit detection~~
+  - Player asteroid collision
 - Add pickups / win state
 - Add sprites
 
