@@ -103,10 +103,7 @@ function _draw() {
   var now = new Date().getTime();
   dt = now - (time || now);
   time = now; 
-  //Reposition the camera
-  camX = player.posX -PX_WIDTH/2 -player.width/2;
-  camY = player.posY -PX_HEIGHT/2 -player.height/2;
-  //TODO: Apply camera as ctx offset here?
+
       
   //Wipe the screen
   ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
@@ -116,7 +113,12 @@ function _draw() {
     element.update();
   });
   
-      
+  //Reposition the camera
+  camX = player.posX -PX_WIDTH/2 -player.width/2;
+  camY = player.posY -PX_HEIGHT/2 -player.height/2;
+  //TODO: Apply camera as ctx offset here?
+  
+        
   //Draw the background
   //TODO: Move somewhere else
   bg = ctx.createPattern(imgStarscape,"repeat");
