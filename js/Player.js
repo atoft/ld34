@@ -23,7 +23,7 @@ Player.prototype.update = function() {
   if(spacePressed) {
     if(this.speed < this.maxSpeed) this.speed +=this.acceleration;
   }
-  else this.speed -= this.acceleration;
+  else this.speed -= this.acceleration/4;
   if(this.speed <0) this.speed = 0;
   
   if(this.angle > 2*Math.PI) this.angle -= 2*Math.PI;
@@ -34,7 +34,8 @@ Player.prototype.update = function() {
 
 Player.prototype.draw = function() {
   ctx.save();
-  ctx.translate((this.posX-this.width/2)*screenScale, (this.posY-this.height/2)*screenScale);
+  ctx.translate((this.posX-this.width/2 -camX)*screenScale, 
+                (this.posY-this.height/2 -camY)*screenScale);
   ctx.rotate(this.angle);
 
   ctx.beginPath();
