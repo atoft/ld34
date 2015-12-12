@@ -28,5 +28,10 @@ MoveableEntity.prototype.update = function() {
   
   this.posX += xSpeed * dt;
   this.posY += ySpeed * dt;
-    
+  
+  //Correct for out of bounds
+  if(this.posX < 0) this.posX = WORLD_WIDTH;
+  else if(this.posX > WORLD_WIDTH) this.posX = 0;
+  if(this.posY < 0) this.posY = WORLD_HEIGHT;
+  else if(this.posY > WORLD_HEIGHT) this.posX = 0; 
 }

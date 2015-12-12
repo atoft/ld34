@@ -37,11 +37,13 @@
     var PARALLAX_SCALE = 4;
     
     //The origin of the world is the top-left corner of the "map"
-    var WORLD_WIDTH = 1000;
-    var WORLD_HEIGHT = 1000;
+    var WORLD_WIDTH = 5000;
+    var WORLD_HEIGHT = 5000;
     
-    var SPAWN_POSX = 80;
-    var SPAWN_POSY = 0;
+    var SPAWN_POSX = WORLD_WIDTH/2;
+    var SPAWN_POSY = WORLD_HEIGHT/2;
+    
+    var NUM_ASTEROIDS = 40;
     
     //Inputs
     var rightPressed = false;
@@ -62,12 +64,25 @@
     entities.add( player );
     entities.add( new Asteroid(SPAWN_POSX - 100, SPAWN_POSY -100, 
                   40,60,0.1,Math.PI*0.75, 0.5*2*Math.PI/360) );
+                  
+    for(i=0;i<NUM_ASTEROIDS;i++) {
+      console.log("Created asteroid "+i);
+      entities.add( new Asteroid(Math.random() * WORLD_WIDTH, 
+                                 Math.random() * WORLD_HEIGHT, 
+                                 40 + Math.random()*40, 	//width
+                                 40 + Math.random()*40,		//height
+                                 0.05+Math.random()*0.2,	//move speed
+                                 Math.random()*Math.PI*2,       //start angle
+                                 Math.random()*0.1*Math.PI/360) );          //rot speed
+    }
          
     /*Screen functions*/               
-    function drawFps() {
+    function drawDebugInfo() {
       ctx.font = "16px Roboto";
       ctx.fillStyle = "#0095dd";
-      ctx.fillText("FPS: "+Math.round(1000/dt), 100, 20);
+      ctx.fillText("FPS: "+Math.round(1000/dt)+"     Player: ("+
+                   Math.round(player.posX)+", "+
+                   Math.round(player.posY)+")", 100, 20);
     }
     
     /*Main game*/
@@ -82,8 +97,6 @@
       //Reposition the camera
       camX = player.posX -canvas.width/2 -player.width/2;
       camY = player.posY -canvas.height/2 -player.height/2;
-      console.log("camera x "+camX+" y "+camY);
-      console.log("player x "+player.posX+" y "+player.posY);
     
       //Wipe the screen
       ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -104,7 +117,7 @@
       ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,canvas.width,canvas.height);
       ctx.restore();
       
-      drawFps();
+      drawDebugInfo();
       
       
       //Draw every entity
