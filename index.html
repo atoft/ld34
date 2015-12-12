@@ -14,12 +14,14 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="1280" height="720"></canvas>
+  <canvas id="gameCanvas" width="640" height="360"></canvas>
   
   
   <script type="text/javascript" src="js/MoveableEntity.js"></script>
   <script type="text/javascript" src="js/Player.js"></script>
   <script type="text/javascript" src="js/Asteroid.js"></script>
+  <script type="text/javascript" src="js/Laser.js"></script>
+  
   <script type="text/javascript" src="js/buckets.js"></script> <!--Data structure lib -->
   <script type="text/javascript" src="js/PxLoader.js"></script>
   <script type="text/javascript" src="js/PxLoaderImage.js"></script>
@@ -27,7 +29,7 @@
     console.log("Initializing...");
     
     //Amount to scale rendering from the "actual" resolution
-    var screenScale = 2;
+    var screenScale = 1;
     
     /*Get a reference to the HTML canvas and a 2D rendering context*/
     var canvas = document.getElementById("gameCanvas");
@@ -48,11 +50,14 @@
     var SPAWN_POSY = WORLD_HEIGHT/2;
     
     var NUM_ASTEROIDS = 40;
+    var LASER_LIFETIME = 0.5;
+    var LASER_LENGTH = 640;
     
     //Inputs
     var rightPressed = false;
     var leftPressed = false;
     var spacePressed = false;
+    var upPressed = false;
         
     //Timing
     var time;
@@ -97,11 +102,11 @@
       var now = new Date().getTime();
       dt = now - (time || now);
       time = now; 
-      
       //Reposition the camera
       camX = player.posX -PX_WIDTH/2 -player.width/2;
       camY = player.posY -PX_HEIGHT/2 -player.height/2;
-    
+      //TODO: Apply camera as ctx offset here?
+      
       //Wipe the screen
       ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
     
@@ -123,12 +128,10 @@
       
       drawDebugInfo();
       
-      
       //Draw every entity
       entities.forEach(function(element) {
         element.draw();
       });
-      
     }
     
     document.addEventListener("keydown", keyDownHandler, false);
@@ -142,6 +145,9 @@
       else if(e.keyCode == 37) {
         leftPressed = true;
       }
+      else if(e.keyCode == 38) {
+        upPressed = true;
+      }
       else if(e.keyCode == 32) {
         spacePressed = true;
       }
@@ -152,6 +158,9 @@
       }
       else if(e.keyCode == 37) {
         leftPressed = false;
+      }
+      else if(e.keyCode == 38) {
+        upPressed = false;
       }
       else if(e.keyCode == 32) {
         spacePressed = false;
@@ -166,7 +175,6 @@
     
     loader.addCompletionListener(function() {
       console.log("Starting game loop...");
-      //ctx.drawImage(imgShip,0,0);
       draw();
     });
     

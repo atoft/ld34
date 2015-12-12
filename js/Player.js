@@ -8,6 +8,7 @@ function Player(posX, posY, maxSpeed) {
   this.maxSpeed = maxSpeed;
   this.acceleration = 0.1;
   this.enginesOn = false;
+  this.laser = null;
 }
 
 Player.prototype = Object.create(MoveableEntity.prototype);
@@ -20,7 +21,7 @@ Player.prototype.update = function() {
   if(rightPressed) {
     this.angle += 5 *2*Math.PI/360;
   }
-  if(spacePressed) {
+  if(upPressed) {
     if(this.speed < this.maxSpeed) this.speed +=this.acceleration;
     this.enginesOn = true;
   }
@@ -76,6 +77,16 @@ Player.prototype.update = function() {
     }
   }
   if(this.collide) console.log("Player collision");
+  
+  if(spacePressed) {
+    this.laser = new Laser(this.posX-this.width/2,
+                           this.posY-this.height/2, 
+                           this.posX + LASER_LENGTH*Math.sin(this.angle),
+                           this.posY - LASER_LENGTH*Math.cos(this.angle));
+  }
+  
+  if(this.laser!=null) this.laser.update();
+  
   //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
 }
@@ -96,4 +107,9 @@ Player.prototype.draw = function() {
   else sprite = imgShip;
   ctx.drawImage(sprite,-this.width/2,-this.height/2);
   ctx.restore();
+  
+  if(this.laser!=null && this.laser.lifespan > 0) {
+    this.laser.draw();
+    console.log("laser drawn");
+  }
 }
