@@ -20,8 +20,6 @@
 MoveableEntity.prototype.update = function() {      
   this.collide = false;
   
-  //TODO: Collision tests
-  
   //Update position
   xSpeed = this.speed * Math.sin(this.angle);
   ySpeed = -this.speed * Math.cos(this.angle);
@@ -35,3 +33,7 @@ MoveableEntity.prototype.update = function() {
   if(this.posY < 0) this.posY = WORLD_HEIGHT;
   else if(this.posY > WORLD_HEIGHT) this.posY = 0; 
 }
+
+MoveableEntity.prototype.damage = function(dmg) {
+  console.log("Warning: called damage on object without unique damage method.");
+} 

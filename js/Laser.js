@@ -27,7 +27,6 @@ Laser.prototype.update = function() {
     this.collisionTest();
   }
   else {
-    console.log("laser removed from entity list");
     entities.remove(this);
   }
 }
@@ -48,6 +47,7 @@ function intersects(p0X, p0Y, p1X, p1Y,   p2X, p2Y, p3X, p3Y) {
 }
 
 Laser.prototype.collisionTest = function() {
+  didCollide = false;
   for(i=0; i<entities.size();i++) {
     var element = entities.elementAtIndex(i);
     //Collision of line segment with rectangle, treat as 4 line intersections
@@ -71,9 +71,15 @@ Laser.prototype.collisionTest = function() {
                    p2X, p2Y, p3X, p3Y) ||
         intersects(this.startX, this.startY, this.endX, this.endY,
                    p3X, p3Y, p0X, p0Y) ) {
-      console.log("laser collision");               
+      if(element instanceof Player) continue; //TODO: Allow for enemy lasers
+      else {
+        element.damage(1);
+        didCollide = true;
+        break;
+      }               
     }
   }
+  if(didCollide) entities.remove(this);
 }
 
 Laser.prototype.draw = function() {
