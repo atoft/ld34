@@ -21,6 +21,8 @@
   <script type="text/javascript" src="js/Player.js"></script>
   <script type="text/javascript" src="js/Asteroid.js"></script>
   <script type="text/javascript" src="js/buckets.js"></script> <!--Data structure lib -->
+  <script type="text/javascript" src="js/PxLoader.js"></script>
+  <script type="text/javascript" src="js/PxLoaderImage.js"></script>
   <script>
     console.log("Initializing...");
     
@@ -34,9 +36,6 @@
     /*Global variavles*/
     var PARALLAX_SCALE = 4;
     
-    //Images
-    var IMG_STARSCAPE = new Image();
-    IMG_STARSCAPE.src = "img/stars.png";
     
     
     //Inputs
@@ -91,7 +90,7 @@
       
       //Draw the background
       //TODO: Move somewhere else
-      bg = ctx.createPattern(IMG_STARSCAPE,"repeat");
+      bg = ctx.createPattern(imgStarscape,"repeat");
       ctx.fillStyle = bg;
       ctx.save();
       ctx.translate(-camX/PARALLAX_SCALE,-camY/PARALLAX_SCALE);
@@ -132,10 +131,17 @@
       }
     }
 
-    console.log("Starting game loop...");
-    IMG_STARSCAPE.onload = function() {
-    draw();
-    };
+    console.log("Loading assets");
+    var loader = new PxLoader();
+    var imgStarscape = loader.addImage("img/stars.png");
+    
+    loader.addCompletionListener(function() {
+      console.log("Starting game loop...");
+      //ctx.drawImage(imgStarscape,0,0);
+      draw();
+    });
+    
+    loader.start();
   </script>
 </body>
 </html>
