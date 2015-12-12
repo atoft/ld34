@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="640" height="360"></canvas>
+  <canvas id="gameCanvas" width="1280" height="720"></canvas>
   
   
   <script type="text/javascript" src="js/MoveableEntity.js"></script>
@@ -27,7 +27,7 @@
     console.log("Initializing...");
     
     //Amount to scale rendering from the "actual" resolution
-    var screenScale = 1;
+    var screenScale = 2;
     
     /*Get a reference to the HTML canvas and a 2D rendering context*/
     var canvas = document.getElementById("gameCanvas");
@@ -73,11 +73,11 @@
       console.log("Created asteroid "+i);
       entities.add( new Asteroid(Math.random() * WORLD_WIDTH, 
                                  Math.random() * WORLD_HEIGHT, 
-                                 40 + Math.random()*40, 	//width
-                                 40 + Math.random()*40,		//height
-                                 0.05+Math.random()*0.2,	//move speed
-                                 Math.random()*Math.PI*2,       //start angle
-                                 Math.random()*0.1*Math.PI/360) );          //rot speed
+                                 40 + Math.random()*40, 	    //width
+                                 40 + Math.random()*40,		    //height
+                                 0.05+Math.random()*0.2,	    //move speed
+                                 Math.random()*Math.PI*2,           //start angle
+                                 Math.random()*0.1*Math.PI/360) );  //rot speed
     }
          
     /*Screen functions*/               
@@ -161,10 +161,12 @@
     console.log("Loading assets");
     var loader = new PxLoader();
     var imgStarscape = loader.addImage("img/stars.png");
+    var imgShip      = loader.addImage("img/ship.png");
+    var imgShipFly   = loader.addImage("img/ship_fly.png");
     
     loader.addCompletionListener(function() {
       console.log("Starting game loop...");
-      //ctx.drawImage(imgStarscape,0,0);
+      //ctx.drawImage(imgShip,0,0);
       draw();
     });
     

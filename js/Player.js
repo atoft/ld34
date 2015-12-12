@@ -7,7 +7,7 @@ function Player(posX, posY, maxSpeed) {
   MoveableEntity.call(this,posX, posY, 40, 40, 0);
   this.maxSpeed = maxSpeed;
   this.acceleration = 0.1;
-  
+  this.enginesOn = false;
 }
 
 Player.prototype = Object.create(MoveableEntity.prototype);
@@ -22,8 +22,12 @@ Player.prototype.update = function() {
   }
   if(spacePressed) {
     if(this.speed < this.maxSpeed) this.speed +=this.acceleration;
+    this.enginesOn = true;
   }
-  else this.speed -= this.acceleration/4;
+  else {
+    this.speed -= this.acceleration/4;
+    this.enginesOn = false;
+  }
   if(this.speed <0) this.speed = 0;
   
   if(this.angle > 2*Math.PI) this.angle -= 2*Math.PI;
@@ -82,11 +86,14 @@ Player.prototype.draw = function() {
                 (this.posY-this.height/2 -camY));
   ctx.rotate(this.angle);
 
-  ctx.beginPath();
-  ctx.rect(-this.width/2, -this.height/2, 
-            this.width, this.height);
-  ctx.fillStyle = "blue";
-  ctx.fill();
-  ctx.closePath();
+  //ctx.beginPath();
+  //ctx.rect(-this.width/2, -this.height/2, 
+  //          this.width, this.height);
+  //ctx.fillStyle = "blue";
+  //ctx.fill();
+  //ctx.closePath();
+  if(this.enginesOn) sprite = imgShipFly;
+  else sprite = imgShip;
+  ctx.drawImage(sprite,-this.width/2,-this.height/2);
   ctx.restore();
 }
