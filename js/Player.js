@@ -8,7 +8,10 @@ function Player(posX, posY, maxSpeed) {
   this.maxSpeed = maxSpeed;
   this.acceleration = 0.1;
   this.enginesOn = false;
-  this.laser = null;
+  this.health = PLAYER_MAXHEALTH;
+  
+  this.invulnerabilityTimer = 0;
+  this.weaponTimer = 0;
 }
 
 Player.prototype = Object.create(MoveableEntity.prototype);
@@ -76,16 +79,23 @@ Player.prototype.update = function() {
       }
     }
   }
-  if(this.collide) console.log("Player collision");
-  
-  if(spacePressed) {
-    this.laser = new Laser(this.posX-this.width/2,
-                           this.posY-this.height/2, 
-                           this.posX + LASER_LENGTH*Math.sin(this.angle),
-                           this.posY - LASER_LENGTH*Math.cos(this.angle));
+  if(this.collide && this.invulnerabilityTimer<=0) {
+    this.health--;
+    this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
+  }
+  if(this.invulnerabilityTimer>0) {
+    this.invulnerabilityTimer -= 1/dt;
+  }
+  if(this.weaponTimer > 0) {
+    this.weaponTimer -= 1/dt;
   }
   
-  if(this.laser!=null) this.laser.update();
+  if(spacePressed  && this.weaponTimer<=0 ) {
+    entities.add(new Laser(this.posX-this.width/2,
+                           this.posY-this.height/2, 
+                           this.angle));
+    this.weaponTimer = WEAPON_TIMEOUT;
+  }
   
   //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
@@ -107,9 +117,4 @@ Player.prototype.draw = function() {
   else sprite = imgShip;
   ctx.drawImage(sprite,-this.width/2,-this.height/2);
   ctx.restore();
-  
-  if(this.laser!=null && this.laser.lifespan > 0) {
-    this.laser.draw();
-    console.log("laser drawn");
-  }
 }

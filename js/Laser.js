@@ -3,19 +3,32 @@
  * test for collision with Entities.
  */
  
-var Laser = function( startX, startY, endX, endY ) {
+var Laser = function( startX, startY, angle ) {
   this.startX = startX;
   this.startY = startY;
-  this.endX = endX;
-  this.endY = endY;
-  
+  this.angle = angle;
+  this.endX = this.startX + LASER_LENGTH*Math.sin(this.angle);
+  this.endY = this.startY - LASER_LENGTH*Math.cos(this.angle);
+                           
   this.lifespan = LASER_LIFETIME;
 }
 
 Laser.prototype.update = function() {
   if(this.lifespan > 0) {
+    dX = LASER_SPEED * dt * Math.sin(this.angle);
+    dY = LASER_SPEED * dt * Math.cos(this.angle);
+  
+    this.startX += dX;
+    this.startY -= dY;
+    this.endX += dX;
+    this.endY -= dY;
+    
     this.lifespan -= 1/dt;
     this.collisionTest();
+  }
+  else {
+    console.log("laser removed from entity list");
+    entities.remove(this);
   }
 }
 

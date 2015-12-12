@@ -37,7 +37,7 @@
     ctx.imageSmoothingEnabled = false; //Display pixellated images
     ctx.scale(screenScale,screenScale);
              
-    /*Global variavles*/
+    /*Global variables*/
     var PARALLAX_SCALE = 4;
     var PX_WIDTH = 640;
     var PX_HEIGHT = 360;
@@ -50,8 +50,13 @@
     var SPAWN_POSY = WORLD_HEIGHT/2;
     
     var NUM_ASTEROIDS = 40;
-    var LASER_LIFETIME = 0.5;
-    var LASER_LENGTH = 640;
+    var LASER_LIFETIME = 5;
+    var LASER_LENGTH = 100;
+    var LASER_SPEED = 1;
+    var WEAPON_TIMEOUT = 1;
+    
+    var PLAYER_MAXHEALTH = 5;
+    var PLAYER_INVULNERABLE_TIMEOUT = 5;
     
     //Inputs
     var rightPressed = false;
@@ -93,6 +98,11 @@
                    Math.round(player.posX)+", "+
                    Math.round(player.posY)+")", 100, 20);
     }
+    function drawStats() {
+      ctx.font = "16px Roboto";
+      ctx.fillStyle = "#ff0000";
+      ctx.fillText("Health: "+player.health+"  Invincible: "+player.invulnerabilityTimer, 100, 40);
+    }
     
     /*Main game*/
     function draw() {
@@ -127,6 +137,7 @@
       ctx.restore();
       
       drawDebugInfo();
+      drawStats();
       
       //Draw every entity
       entities.forEach(function(element) {
