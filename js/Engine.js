@@ -8,6 +8,7 @@ var WORLD_HEIGHT = 10000;
     
 var SPAWN_POSX = WORLD_WIDTH/2;
 var SPAWN_POSY = WORLD_HEIGHT/2;
+var SPAWN_SAFE_RADIUS = 200;
     
 var NUM_ASTEROIDS = 160;
 var ASTEROID_HEALTH = 3;
@@ -21,6 +22,9 @@ var PLAYER_MAXHEALTH = 5;
 var PLAYER_INVULNERABLE_TIMEOUT = 5;
 
 var PICKUP_SIZE = 40;
+var NUM_JUNK = 20;
+var NUM_HEALTH = 10;
+var JUNK_NEEDED = 5;
     
 var PARALLAX_SCALE = 4;
 
@@ -33,31 +37,57 @@ var player;
 
 var gameOver;
 var victory;
-var numJunk = 0;
+var numJunk;
 
 
     
 var Engine = function() {
+  //Initialise game objects
+  numJunk = 0;
   entities = new buckets.LinkedList();
   player = new Player(SPAWN_POSX, SPAWN_POSY, 0.5);
   entities.add( player );
-  
 
-    
-  for(i=0;i<NUM_ASTEROIDS;i++) {
-    console.log("Created asteroid "+i);
-    entities.add( new Asteroid(Math.random() * WORLD_WIDTH, 
-                               Math.random() * WORLD_HEIGHT, 
+  //Randomly generate all the objects in the level
+  for(i=0;i< NUM_ASTEROIDS + NUM_JUNK + NUM_HEALTH;i++) {
+    rangeCheck = false;
+    while(!rangeCheck) {
+      x = Math.random() * WORLD_WIDTH;
+      y = Math.random() * WORLD_HEIGHT;
+      if( x< SPAWN_POSX-SPAWN_SAFE_RADIUS || x> SPAWN_POSX+SPAWN_SAFE_RADIUS
+          || y< SPAWN_POSY-SPAWN_SAFE_RADIUS || y> SPAWN_POSY+SPAWN_SAFE_RADIUS ) {
+        rangeCheck = true;    
+      }
+    }
+    if(i < NUM_ASTEROIDS) 
+    entities.add( new Asteroid(x, 
+                               y, 
                                40 + Math.random()*40, 	          //width
                                40 + Math.random()*40,	          //height
                                0.05+Math.random()*0.2,	          //move speed
                                Math.random()*Math.PI*2,           //start angle
                                Math.random()*0.1*Math.PI/360,     //rot speed
                                false)                             //is not debris
-                               );                           
+                               );    
+    else if(i< NUM_ASTEROIDS + NUM_JUNK)       
+    entities.add( new Pickup  (x, 
+                               y, 
+                               0,	          //move speed
+                               0,                 //start angle
+                               0.02*Math.PI/360,  //rot speed
+                               1)                 //is space junk
+                               ); 
+    else      
+    entities.add( new Pickup  (x, 
+                               y, 
+                               0,	          //move speed
+                               0,                 //start angle
+                               0.02*Math.PI/360,  //rot speed
+                               0)                 //is health
+                               );          
   }
-  entities.add( new Pickup(4500,4500,0,0,0.1,0) );
-  entities.add( new Pickup(5000,4500,0,0,0.1,1) );
+  
+
   _draw();
 }
 
@@ -73,7 +103,7 @@ function _drawDebugInfo() {
 function _drawStats() {
   ctx.font = "16px Pixel";
   ctx.fillStyle = "#ff0000";
-  ctx.fillText("Health: "+player.health+"  Invincible: "+player.invulnerabilityTimer, 100, 40);
+  ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 40);
 }
 function _gameOver() {
   if(lmbPressed) {
@@ -97,11 +127,36 @@ function _gameOver() {
   ctx.fillText("Click to retry",PX_WIDTH/2-180,PX_HEIGHT/2+50);
   
 }
+function _victory() {
+  /*
+  if(lmbPressed) {
+    gameOver = false;
+    new Engine();
+  }
+  */
+  requestAnimationFrame(_victory);
+  //TODO: Do a victory animation
+  ctx.beginPath();
+  ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
+  ctx.fillStyle = "black";
+  ctx.strokeStyle = "yellow";
+  ctx.fill();
+  ctx.stroke();
+  ctx.closePath();
+  
+  ctx.fillStyle = "yellow";
+  ctx.font = "16px Pixel";
+  ctx.fillText("CONGRATULATIONS",PX_WIDTH/2-180,PX_HEIGHT/2-70);
+  ctx.fillText("You esacaped",PX_WIDTH/2-180,PX_HEIGHT/2-40);
+  ctx.fillText("the Empire!",PX_WIDTH/2-180,PX_HEIGHT/2-10);
+  ctx.fillText("...this time.",PX_WIDTH/2-180,PX_HEIGHT/2+50);
+  
+}
     
 /*Main game*/
 function _draw() {
   if(gameOver) _gameOver();
-  //else if(victory) _victory();
+  else if(victory) _victory();
   else requestAnimationFrame(_draw);
       
   //Calculate the amount, dt, to advance the simulation by
@@ -117,6 +172,9 @@ function _draw() {
   entities.forEach(function(element) {
     element.update();
   });
+  
+  //Check for victory
+  if(numJunk == JUNK_NEEDED) victory = true;
   
   //Reposition the camera
   camX = player.posX -PX_WIDTH/2 -player.width/2;
