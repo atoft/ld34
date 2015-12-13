@@ -121,8 +121,8 @@
       }
     }
     function mouseMoveHandler(e) {
-      mouseX = (event.pageX - canvas.offsetLeft)*screenScale;
-      mouseY = (event.pageY - canvas.offsetTop)*screenScale;
+      mouseX = (e.pageX - canvas.offsetLeft)*screenScale;
+      mouseY = (e.pageY - canvas.offsetTop)*screenScale;
       mouseMoved = true;
     }
 
