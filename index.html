@@ -42,6 +42,11 @@
     var ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; //Display pixellated images
     ctx.scale(screenScale,screenScale);
+    
+    //Suppress right click
+    canvas.oncontextmenu = function (e) {
+      e.preventDefault();
+    };
              
     /*Global variables*/
     var PX_WIDTH = 640;
@@ -53,6 +58,10 @@
     var spacePressed = false;
     var upPressed = false;
     var lmbPressed = false;
+    var rmbPressed = false;
+    var mouseX = 0;
+    var mouseY = 0;
+    var mouseMoved = false;
         
     //Timing
     var time;
@@ -61,7 +70,7 @@
     //Input
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
-    //document.addEventListener("mousemove", mouseMoveHandler, false);
+    document.addEventListener("mousemove", mouseMoveHandler, false);
     window.addEventListener("mousedown", mouseDownHandler, false);
     window.addEventListener("mouseup", mouseUpHandler, false);
     
@@ -94,12 +103,27 @@
       }
     }
     function mouseDownHandler(e) {
-      x = event.pageX - canvas.offsetLeft;
-      y = event.pageY - canvas.offsetTop;
-      lmbPressed = true;
+      if(e.button == 0 || e.button == 1){
+        lmbPressed = true;
+      }
+      else if(e.button == 2){
+        rmbPressed = true;
+      }
     }
     function mouseUpHandler(e) {
-      lmbPressed = false;
+      if(e.button === 0 || e.button === 1){
+        console.log("lmb released");
+        lmbPressed = false;
+      }
+      else if(e.button === 2){
+        console.log("rmb released");
+        rmbPressed = false;
+      }
+    }
+    function mouseMoveHandler(e) {
+      mouseX = (event.pageX - canvas.offsetLeft)*screenScale;
+      mouseY = (event.pageY - canvas.offsetTop)*screenScale;
+      mouseMoved = true;
     }
 
     console.log("Loading assets");
@@ -107,6 +131,7 @@
     var imgStarscape = loader.addImage("img/stars.png");
     var imgShip      = loader.addImage("img/ship.png");
     var imgShipFly   = loader.addImage("img/ship_fly.png");
+    var imgCrosshair   = loader.addImage("img/crosshair.png");
     
     loader.addCompletionListener(function() {
 

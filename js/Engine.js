@@ -20,6 +20,7 @@ var WEAPON_TIMEOUT = 1;
     
 var PLAYER_MAXHEALTH = 5;
 var PLAYER_INVULNERABLE_TIMEOUT = 5;
+var PLAYER_ROTSPEED = 5 *2*Math.PI/360;
 
 var PICKUP_SIZE = 40;
 var NUM_JUNK = 20;
@@ -105,8 +106,17 @@ function _drawStats() {
   ctx.fillStyle = "#ff0000";
   ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 40);
 }
+function _drawCursor() {
+  ctx.drawImage(imgCrosshair,mouseX-imgCrosshair.width/2,mouseY-imgCrosshair.height/2);
+}
+
+//TODO: Clean up this up (+ add animation)
+var tmppressed = false;
+var tmpreleased = false;
 function _gameOver() {
-  if(lmbPressed) {
+  if(lmbPressed) tmppressed = true;
+  if(!lmbPressed) tmpreleased = true;
+  if(tmppressed && tmpreleased) {
     gameOver = false;
     new Engine();
   }
@@ -164,6 +174,7 @@ function _draw() {
   dt = now - (time || now);
   time = now; 
 
+
       
   //Wipe the screen
   ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
@@ -199,7 +210,8 @@ function _draw() {
     //TODO: Check the entity is within drawable range
     element.draw();
   });
-
+  _drawCursor();
+  mouseMoved = false; //TODO: Is this the best way to handle this?
 }
 
 

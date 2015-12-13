@@ -12,6 +12,9 @@ function Player(posX, posY, maxSpeed) {
   
   this.invulnerabilityTimer = 0;
   this.weaponTimer = 0;
+  
+  this.mouseAngle =0;
+  this.usingMouse = false;
 }
 
 Player.prototype = Object.create(MoveableEntity.prototype);
@@ -24,12 +27,30 @@ Player.prototype.update = function() {
   }
 
   if(leftPressed) {
-    this.angle -= 5 *2*Math.PI/360;
+    this.usingMouse = false;
+    this.angle -= PLAYER_ROTSPEED;
   }
   if(rightPressed) {
-    this.angle += 5 *2*Math.PI/360;
+    this.usingMouse = false;
+    this.angle += PLAYER_ROTSPEED;
   }
-  if(upPressed) {
+  if(mouseMoved) {
+    this.usingMouse = true;
+    this.mouseAngle = Math.atan( (mouseX - canvas.width/2) / -(mouseY - canvas.height/2) );
+    if(mouseY > canvas.height/2) this.mouseAngle += Math.PI;
+    if(this.mouseAngle < 0) this.mouseAngle += Math.PI*2;
+    console.log(this.mouseAngle);
+  }
+  if(this.usingMouse) {
+  if(this.mouseAngle - this.angle > PLAYER_ROTSPEED ||
+     this.mouseAngle - this.angle < - PLAYER_ROTSPEED) {
+  if( this.mouseAngle > Math.PI*1.5 && this.angle <Math.PI*0.5 ) this.angle -= PLAYER_ROTSPEED;
+  else if( this.angle > Math.PI*1.5 && this.mouseAngle <Math.PI*0.5 ) this.angle += PLAYER_ROTSPEED;
+  else if(this.mouseAngle < this.angle) this.angle -= PLAYER_ROTSPEED;
+  else if(this.mouseAngle > this.angle) this.angle += PLAYER_ROTSPEED;
+  }
+  }
+  if(upPressed || lmbPressed) {
     if(this.speed < this.maxSpeed) this.speed +=this.acceleration;
     this.enginesOn = true;
   }
@@ -43,7 +64,7 @@ Player.prototype.update = function() {
   else if (this.angle < 0) this.angle += 2*Math.PI;
   
   //Do collision with other objects
-  //TODO: Currently don't account for rotation
+  //TODO: Use the same method as lasers
   for(i=0; i<entities.size();i++) {
     var element = entities.elementAtIndex(i);
     if(element == this) continue;
@@ -104,7 +125,7 @@ Player.prototype.update = function() {
     this.weaponTimer -= 1/dt;
   }
   
-  if(spacePressed  && this.weaponTimer<=0 ) {
+  if((spacePressed ||rmbPressed) && this.weaponTimer<=0 ) {
     entities.add(new Laser(this.posX-this.width/2,
                            this.posY-this.height/2, 
                            this.angle));
