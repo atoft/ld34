@@ -11,6 +11,8 @@ var Laser = function( startX, startY, angle ) {
   this.endY = this.startY - LASER_LENGTH*Math.cos(this.angle);
                            
   this.lifespan = LASER_LIFETIME;
+  
+  this.didCollide = false;
 }
 
 Laser.prototype.update = function() {
@@ -47,21 +49,25 @@ function intersects(p0X, p0Y, p1X, p1Y,   p2X, p2Y, p3X, p3Y) {
 }
 
 Laser.prototype.collisionTest = function() {
-  didCollide = false;
+  if(this.didCollide) {
+    entities.remove(this);
+  }
   for(i=0; i<entities.size();i++) {
     var element = entities.elementAtIndex(i);
+    if(element instanceof Asteroid) angle = element.driftAngle;
+    else angle = element.angle;
     //Collision of line segment with rectangle, treat as 4 line intersections
-    p0X = element.posX - Math.cos(element.angle)*element.width/2 + Math.sin(element.angle)*element.height/2;
-    p0Y = element.posY - Math.cos(element.angle)*element.height/2 - Math.sin(element.angle)*element.width/2;
+    p0X = element.posX - Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2;
+    p0Y = element.posY - Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2;
     
-    p1X = element.posX - Math.cos(element.angle)*element.width/2 - Math.sin(element.angle)*element.height/2;
-    p1Y = element.posY - Math.cos(element.angle)*element.height/2 + Math.sin(element.angle)*element.width/2;
+    p1X = element.posX - Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2;
+    p1Y = element.posY + Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2;
     
-    p2X = element.posX + Math.cos(element.angle)*element.width/2 - Math.sin(element.angle)*element.height/2;
-    p2Y = element.posY + Math.cos(element.angle)*element.height/2 + Math.sin(element.angle)*element.width/2;
+    p2X = element.posX + Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2;
+    p2Y = element.posY + Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2;
     
-    p3X = element.posX + Math.cos(element.angle)*element.width/2 + Math.sin(element.angle)*element.height/2;
-    p3Y = element.posY + Math.cos(element.angle)*element.height/2 - Math.sin(element.angle)*element.width/2;
+    p3X = element.posX + Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2;
+    p3Y = element.posY - Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2;
     
     if( intersects(this.startX, this.startY, this.endX, this.endY,
                    p0X, p0Y, p1X, p1Y) || 
@@ -74,12 +80,12 @@ Laser.prototype.collisionTest = function() {
       if(element instanceof Player) continue; //TODO: Allow for enemy lasers
       else {
         element.damage(1);
-        didCollide = true;
+        this.didCollide = true;
         break;
       }               
     }
   }
-  if(didCollide) entities.remove(this);
+
 }
 
 Laser.prototype.draw = function() {

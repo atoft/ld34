@@ -4,7 +4,7 @@
  */
  
 function Asteroid(posX, posY, width, height, speed, angle, driftSpeed, isDebris) {
-  this.driftAngle = 0;
+  this.driftAngle = Math.PI/4;
   this.driftSpeed = driftSpeed;
   MoveableEntity.call(this,posX, posY, width, height, angle);
   this.speed = speed;
@@ -64,8 +64,16 @@ Asteroid.prototype.damage = function(dmg) {
 //Asteroids are drawn at their drift angle, rather than their angle of movement
 Asteroid.prototype.draw = function() {
   ctx.save();
-  ctx.translate((this.posX-this.width/2-camX), 
-                (this.posY-this.height/2-camY));
+  ctx.translate((this.posX/*-this.width/2-*/-camX), 
+                (this.posY/*-this.height/2-*/-camY));
+                
+  ctx.beginPath();
+  ctx.rect(-this.width/2, -this.height/2, 
+            this.width, this.height);
+  ctx.fillStyle = "orange";
+  ctx.fill();
+  ctx.closePath();              
+                
   ctx.rotate(this.driftAngle);
 
   ctx.beginPath();
