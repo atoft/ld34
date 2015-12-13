@@ -68,7 +68,7 @@ var Engine = function() {
                                0.05+Math.random()*0.2,	          //move speed
                                Math.random()*Math.PI*2,           //start angle
                                Math.random()*0.1*Math.PI/360,     //rot speed
-                               false)                             //is not debris
+                               1+Math.round(Math.random()*3) )     //is any type except debris
                                );    
     else if(i< NUM_ASTEROIDS + NUM_JUNK)       
     entities.add( new Pickup  (x, 

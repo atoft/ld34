@@ -3,14 +3,14 @@
  * A child type of MoveableEntity
  */
  
-function Asteroid(posX, posY, width, height, speed, angle, driftSpeed, isDebris) {
+function Asteroid(posX, posY, width, height, speed, angle, driftSpeed, type) {
   this.driftAngle = Math.PI/4;
   this.driftSpeed = driftSpeed;
   MoveableEntity.call(this,posX, posY, width, height, angle);
   this.speed = speed;
   this.health = ASTEROID_HEALTH;
   this.invulnerabilityTimer = 0;
-  this.isDebris = isDebris;
+  this.type = type; //0 = debris type
 }
 
 Asteroid.prototype = Object.create(MoveableEntity.prototype);
@@ -28,7 +28,7 @@ Asteroid.prototype.update = function() {
     entities.remove(this);
     
     //Create debris from the explosion
-    if(!this.isDebris) {
+    if(this.type!=0) {
       for(i=0; i<3; i++) {
         entities.add( new Asteroid(this.posX, 
                                  this.posY, 
@@ -37,7 +37,7 @@ Asteroid.prototype.update = function() {
                                  0.05+this.speed,	    //move speed
                                  this.angle + i*Math.PI*2/3,  //start angle
                                  (i-1)*0.1*Math.PI/360,     //rot speed
-                                 true ));                   //is debris
+                                 0 ));                   //is debris
       }
     }
   }
@@ -64,23 +64,19 @@ Asteroid.prototype.damage = function(dmg) {
 //Asteroids are drawn at their drift angle, rather than their angle of movement
 Asteroid.prototype.draw = function() {
   ctx.save();
+  //ctx.scale(this.width,this.height);
   ctx.translate((this.posX/*-this.width/2-*/-camX), 
                 (this.posY/*-this.height/2-*/-camY));
-                
-  ctx.beginPath();
-  ctx.rect(-this.width/2, -this.height/2, 
-            this.width, this.height);
-  ctx.fillStyle = "orange";
-  ctx.fill();
-  ctx.closePath();              
-                
+                                
   ctx.rotate(this.driftAngle);
-
-  ctx.beginPath();
-  ctx.rect(-this.width/2, -this.height/2, 
-            this.width, this.height);
-  ctx.fillStyle = "red";
-  ctx.fill();
-  ctx.closePath();
+  switch(this.type) {
+    case 0 : img = imgAsteroid4;break;
+    case 1 : img = imgAsteroid1;break;
+    case 2 : img = imgAsteroid2;break;
+    case 3 : img = imgAsteroid3;break;
+    default : img = imgAsteroid1;
+  }
+  
+  ctx.drawImage(img,-this.width/2,-this.height/2,this.width,this.height);
   ctx.restore();
 }
