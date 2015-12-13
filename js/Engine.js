@@ -19,6 +19,8 @@ var WEAPON_TIMEOUT = 1;
     
 var PLAYER_MAXHEALTH = 5;
 var PLAYER_INVULNERABLE_TIMEOUT = 5;
+
+var PICKUP_SIZE = 40;
     
 var PARALLAX_SCALE = 4;
 
@@ -31,6 +33,7 @@ var player;
 
 var gameOver;
 var victory;
+var numJunk = 0;
 
 
     
@@ -53,6 +56,8 @@ var Engine = function() {
                                false)                             //is not debris
                                );                           
   }
+  entities.add( new Pickup(4500,4500,0,0,0.1,0) );
+  entities.add( new Pickup(5000,4500,0,0,0.1,1) );
   _draw();
 }
 
@@ -133,6 +138,7 @@ function _draw() {
       
   //Draw every entity
   entities.forEach(function(element) {
+    //TODO: Check the entity is within drawable range
     element.draw();
   });
 

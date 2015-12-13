@@ -83,6 +83,15 @@ Player.prototype.update = function() {
         }
       }
     }
+    
+    //TODO: This behaviour should be in the Pickup object
+    if(this.collide && element instanceof Pickup) {
+      if(element.pickupType == 0 && this.health < PLAYER_MAXHEALTH) this.health++;
+      else if(element.pickupType == 1) numJunk++;
+      entities.remove(element);
+      this.collide = false;
+    }
+    if(this.collide) break;
   }
   if(this.collide && this.invulnerabilityTimer<=0) {
     this.health--;
