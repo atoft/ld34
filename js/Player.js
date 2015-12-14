@@ -119,12 +119,9 @@ Player.prototype.update = function() {
     }
     if(this.collide) break;
   }
-  if(this.collide && this.invulnerabilityTimer<=0) {
-    this.health--;
-
-    sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
+  if(this.collide) {
+    this.damage(1);
     
-    this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   }
   if(this.invulnerabilityTimer>0) {
     this.invulnerabilityTimer -= 1/dt;
@@ -143,6 +140,18 @@ Player.prototype.update = function() {
   
   //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
+}
+
+Player.prototype.damage = function(dmg) {
+  //Don't call parent because it presently has no implementation
+  //TODO: Possibly move this to parent
+  if(this.invulnerabilityTimer <=0 ) {
+    this.health-=dmg;
+    sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
+    
+    this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
+  }
+  
 }
 
 Player.prototype.draw = function() {
