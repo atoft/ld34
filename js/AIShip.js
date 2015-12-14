@@ -10,6 +10,7 @@ function AIShip(posX, posY,target) {
   this.health = AI_MAXHEALTH;
   
   this.target = target;
+  this.angle = 0;
   
   this.invulnerabilityTimer = 0;
   this.weaponTimer = 0;
@@ -32,13 +33,52 @@ AIShip.prototype.update = function() {
     //try to avoid asteroid
   
   //get player distance and direction
-  targetDist = Math.sqrt( Math.pow(this.posX - target.posX, 2) 
-                          + Math.pow(this.posX - target.posX, 2) );
-  targetAngle = Math.atan( (target.posX - this.posX) / -(target.posY - this.posY) );
+  targetDist = Math.sqrt( Math.pow(this.posX - this.target.posX, 2) 
+                          + Math.pow(this.posY - this.target.posY, 2) );
+  targetAngle = Math.atan( (this.target.posX - this.posX) / -(this.target.posY - this.posY) );
+
+  if(this.target.posY > this.posY) targetAngle -= Math.PI;
+  
 
   //if player distance > safeDist & <maxDistance
     //increase speed to max speed
   //else reduce speed
+  if(targetDist < AI_RANGE) {
+    if(targetDist > AI_TARGET_SAFEDIST) {
+      if(this.speed < AI_MAXSPEED) this.speed+=this.acceleration;
+    }
+    else if(targetDist < AI_TARGET_SAFEDIST && targetDist > AI_TARGET_AVOIDDIST) {
+      //slow down as we get close
+      if(this.speed-this.acceleration > 0) this.speed-=this.acceleration/2;
+    }
+    else {
+      //try to escape
+      targetAngle +=Math.PI/2;
+      if(this.speed < AI_MAXSPEED) this.speed+=this.acceleration;
+    }
+  }
+  else {
+    //lost the player
+    if(this.speed-this.acceleration > 0) this.speed-=this.acceleration;
+  }
+
+  //Correct target angle to within range
+  if(targetAngle < 0 ) targetAngle+=Math.PI*2;
+  if(targetAngle >Math.PI*2) targetAngle -= Math.PI*2;
+  
+  console.log("target angle: "+Math.round(targetAngle*360/(Math.PI*2))+" this angle: "+Math.round(this.angle*360/(Math.PI*2)));
+  
+  if(targetAngle - this.angle > AI_ROTSPEED ||
+     targetAngle - this.angle < - AI_ROTSPEED) {
+  if( targetAngle > Math.PI*1.75 && this.angle <Math.PI*0.25 ) this.angle -= AI_ROTSPEED;
+  else if( this.angle > Math.PI*1.75 && targetAngle <Math.PI*0.25 ) this.angle += AI_ROTSPEED;
+  else if(targetAngle < this.angle) this.angle -= AI_ROTSPEED;
+  else if(targetAngle > this.angle) this.angle += AI_ROTSPEED;
+  }
+  
+  //correct my angle to within range
+  if(this.angle < 0 ) this.angle+=Math.PI*2;
+  if(this.angle >Math.PI*2) this.angle -= Math.PI*2;
   
   //if player is in range
     //Fire weapon
@@ -89,7 +129,7 @@ AIShip.prototype.update = function() {
     if(this.collide) break;
   }
   if(this.collide && this.invulnerabilityTimer<=0) {
-    this.health--;
+    //this.health--;
 
     sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
     
@@ -106,7 +146,7 @@ AIShip.prototype.update = function() {
   MoveableEntity.prototype.update.call(this);  
 }
 
-Player.prototype.draw = function() {
+AIShip.prototype.draw = function() {
   ctx.save();
   ctx.translate((this.posX-this.width/2 -camX), 
                 (this.posY-this.height/2 -camY));
@@ -121,5 +161,5 @@ Player.prototype.draw = function() {
   //if(this.enginesOn) sprite = imgShipFly;
   //else sprite = imgShip;
   //ctx.drawImage(sprite,-this.width/2,-this.height/2);
-  //ctx.restore();
+  ctx.restore();
 }

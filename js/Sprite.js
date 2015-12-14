@@ -42,7 +42,6 @@ Sprite.prototype.damage = function(dmg) {
 } 
 
 Sprite.prototype.draw = function() {
-  console.log("Sprite draw called");
   ctx.save();
   if(this.isInWorld) ctx.translate((this.posX -camX-this.image.width*this.scale/(2*this.numFrames)), 
                 (this.posY -camY-this.image.height*this.scale/2));

@@ -24,7 +24,12 @@ var PLAYER_ROTSPEED = 5 *2*Math.PI/360;
 
 var AI_MAXSPEED = 0.5;
 var AI_ACCELERATION = 0.1;
+var AI_ROTSPEED = 5 *2*Math.PI/360;
 var AI_MAXHEALTH = 3;
+var AI_INVULNERABLE_TIMEOUT = 5;
+var AI_RANGE = 1000;
+var AI_TARGET_SAFEDIST = 250;
+var AI_TARGET_AVOIDDIST = 200;
 
 var PICKUP_SIZE = 40;
 var NUM_JUNK = 20;
@@ -93,6 +98,9 @@ var Engine = function() {
                                0)                 //is health
                                );          
   }
+  
+  entities.add( new AIShip (5100, 5100, player) );
+  
   _draw();
 }
 
@@ -219,8 +227,6 @@ function _draw() {
   
   //Draw animations
   sprites.forEach(function(element) {
-    console.log("drew a sprite");
-    console.log(element);
     element.update();
     element.draw();
   });
