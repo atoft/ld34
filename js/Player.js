@@ -126,6 +126,11 @@ Player.prototype.update = function() {
       entities.remove(element);
       this.collide = false;
     }
+    if(this.collide && element instanceof AIShip) {
+      //quick fix to prevent losing too much health fighting AI
+      this.collide = false;
+      continue;
+    }
     if(this.collide) break;
   }
   if(this.collide) {
