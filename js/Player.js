@@ -116,6 +116,8 @@ Player.prototype.update = function() {
   }
   if(this.collide && this.invulnerabilityTimer<=0) {
     this.health--;
+
+    
     this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   }
   if(this.invulnerabilityTimer>0) {
