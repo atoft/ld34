@@ -54,6 +54,8 @@ var victory;
 var numJunk;
 var numAI = NUM_AI;
 
+var cutscene = true;
+
 
     
 var Engine = function() {
@@ -104,7 +106,8 @@ var Engine = function() {
     else entities.add( new AIShip (x, y, player) );        
   }
   
-  
+  //music.volume = 0.5;
+  //music.play();
   
   _draw();
 }
@@ -189,6 +192,7 @@ function _victory() {
 function _draw() {
   if(gameOver) _gameOver();
   else if(victory) _victory();
+  else if(cutscene) drawCutscene();
   else requestAnimationFrame(_draw);
       
   //Calculate the amount, dt, to advance the simulation by
@@ -196,11 +200,11 @@ function _draw() {
   dt = now - (time || now);
   time = now; 
 
-
       
   //Wipe the screen
   ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
-      
+   
+
   //Update every entity
   entities.forEach(function(element) {
     element.update();

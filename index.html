@@ -11,7 +11,7 @@
     src: url('font/prstartk.ttf');
     }
     canvas {
-      background: #eee;
+      background: black;
       display: block;
       margin: auto;
       image-rendering: optimizeSpeed;             /* Older versions of FF          */
@@ -46,6 +46,7 @@
   <script type="text/javascript" src="js/Pickup.js"></script>
   <script type="text/javascript" src="js/Sprite.js"></script>
   <script type="text/javascript" src="js/AIShip.js"></script>
+  <script type="text/javascript" src="js/Cutscene.js"></script>
   
   <script type="text/javascript" src="js/buckets.js"></script> <!--Data structure lib -->
   <script type="text/javascript" src="js/PxLoader.js"></script>
@@ -70,6 +71,7 @@
     /*Global variables*/
     var PX_WIDTH = 640;
     var PX_HEIGHT = 360;
+    var engine;
   
     //Inputs
     var rightPressed = false;
@@ -187,24 +189,18 @@
     var imgExplode   = loader.addImage("img/explode.png");
     var imgEnemy   = loader.addImage("img/enemy_fly.png");
     
+    var imgScroll   = loader.addImage("img/scroll.png");
+    var imgLogo     = loader.addImage("img/logo.png");
+    var imgMenu     = loader.addImage("img/menu.png");
+    
     loader.addCompletionListener(function() {
-
       console.log("Starting game loop...");
-
-      new Engine();
+      engine = new Engine();
     });
     
     //load music first
-    music.addEventListener('ended', function() {
-      this.currentTime = 0;
-      this.play();
-    }, false);
-    
-    music.addEventListener('canplaythrough', function() { 
-      music.volume = 0.5;
-      music.play();
-      loader.start();
-    }, false);
+
+    loader.start();
   </script>
 </body>
 </html>
