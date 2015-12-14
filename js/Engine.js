@@ -162,12 +162,6 @@ function _gameOver() {
   
 }
 function _victory() {
-  /*
-  if(lmbPressed) {
-    gameOver = false;
-    new Engine();
-  }
-  */
   requestAnimationFrame(_victory);
   //TODO: Do a victory animation
   ctx.beginPath();
@@ -192,7 +186,6 @@ function _victory() {
 function _draw() {
   if(gameOver) _gameOver();
   else if(victory) _victory();
-  else if(cutscene) drawCutscene();
   else requestAnimationFrame(_draw);
       
   //Calculate the amount, dt, to advance the simulation by
@@ -200,7 +193,8 @@ function _draw() {
   dt = now - (time || now);
   time = now; 
 
-      
+  if(cutscene) drawCutscene();
+  else {    
   //Wipe the screen
   ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
    
@@ -252,6 +246,7 @@ function _draw() {
   _drawStats();
   _drawCursor();
   mouseMoved = false; //TODO: Is this the best way to handle this?
+  }
 }
 
 
