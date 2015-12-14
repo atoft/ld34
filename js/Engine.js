@@ -145,6 +145,7 @@ function _gameOver() {
   ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
   ctx.fillStyle = "black";
   ctx.strokeStyle = "yellow";
+  ctx.lineWidth = 2;
   ctx.fill();
   ctx.stroke();
   ctx.closePath();
@@ -170,6 +171,7 @@ function _victory() {
   ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
   ctx.fillStyle = "black";
   ctx.strokeStyle = "yellow";
+  ctx.lineWidth = 2;
   ctx.fill();
   ctx.stroke();
   ctx.closePath();
@@ -222,8 +224,13 @@ function _draw() {
   ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,PX_WIDTH,PX_HEIGHT);
   ctx.restore();
       
-  _drawDebugInfo();
-  _drawStats();
+  //Draw map edge
+  ctx.beginPath();
+  ctx.rect(-camX,-camY,WORLD_WIDTH,WORLD_HEIGHT);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 16;
+  ctx.stroke();
+  ctx.closePath();
       
   //Draw every entity
   entities.forEach(function(element) {
@@ -237,6 +244,8 @@ function _draw() {
     element.draw();
   });
   
+  _drawDebugInfo();
+  _drawStats();
   _drawCursor();
   mouseMoved = false; //TODO: Is this the best way to handle this?
 }
