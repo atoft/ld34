@@ -22,10 +22,13 @@ Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
   if(this.health<=0) {
-    //Display a death animation
-    gameOver = true;
+    entities.remove(this);
+    sprites.add(new Sprite(this.posX, this.posY, 4, imgExplode, 6, 4, false, true,
+                function(){gameOver = true;}));
+
   }
 
+  /******Controls******/
   if(leftPressed) {
     this.usingMouse = false;
     this.angle -= PLAYER_ROTSPEED;
@@ -62,6 +65,8 @@ Player.prototype.update = function() {
   
   if(this.angle > 2*Math.PI) this.angle -= 2*Math.PI;
   else if (this.angle < 0) this.angle += 2*Math.PI;
+  /******End of controls******/
+  
   
   //Do collision with other objects
   //TODO: Use the same method as lasers
@@ -117,7 +122,7 @@ Player.prototype.update = function() {
   if(this.collide && this.invulnerabilityTimer<=0) {
     this.health--;
 
-    sprites.add(new Sprite(this.posX, this.posY, imgExplode, 6, 4, false, true));
+    sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
     
     this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   }

@@ -3,10 +3,10 @@
  */
  
  
-var Sprite = function(posX, posY, image,numFrames,ticksPerFrame,isLooped,isInWorld) {
+var Sprite = function(posX, posY, scale, image,numFrames,ticksPerFrame,isLooped,isInWorld,callback) {
   this.posX = posX;
   this.posY = posY;
-  
+  this.scale = scale;
   
   this.image = image;
   
@@ -17,6 +17,8 @@ var Sprite = function(posX, posY, image,numFrames,ticksPerFrame,isLooped,isInWor
   
   this.currentFrame = 0;
   this.tickCount = 0;
+  
+  if(callback) this.callback = callback;
 }
 
 Sprite.prototype.update = function() {      
@@ -29,6 +31,7 @@ Sprite.prototype.update = function() {
   if(this.currentFrame > this.numFrames) {
     if(this.isLooped) this.currentFrame = 0;
     else {
+      if(this.callback) this.callback();
       sprites.remove(this);
     }
   }
@@ -41,27 +44,19 @@ Sprite.prototype.damage = function(dmg) {
 Sprite.prototype.draw = function() {
   console.log("Sprite draw called");
   ctx.save();
-  
-  if(this.isInWorld) ctx.drawImage(
+  if(this.isInWorld) ctx.translate((this.posX -camX-this.image.width*this.scale/(2*this.numFrames)), 
+                (this.posY -camY-this.image.height*this.scale/2));
+                
+  ctx.drawImage(
     this.image,
     this.currentFrame * this.image.width / this.numFrames,
     0,
     this.image.width / this.numFrames,
     this.image.height,
-    this.posX -camX-this.image.width/(2*this.numFrames),
-    this.posY -camY-this.image.height,
-    this.image.width / this.numFrames,
-    this.image.height);
-    
-  else ctx.drawImage(
-    this.image,
-    this.currentFrame * this.image.width / this.numFrames,
     0,
-    this.image.width / this.numFrames,
-    this.image.height,
-    this.posX ,
-    this.posY ,
-    this.image.width / this.numFrames,
-    this.image.height);
+    0,
+    this.scale*this.image.width / this.numFrames,
+    this.scale*this.image.height);
+
   ctx.restore();
 }
