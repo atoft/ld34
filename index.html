@@ -29,7 +29,15 @@
 <body>
   <canvas id="gameCanvas" width="640" height="360"></canvas>
   
- 
+  <!--Audio-->
+  <audio id="audio_music1" src="sound/SpaceFighterLoop.mp3" preload>
+  <audio id="audio_explode" src="sound/explode.wav" preload>
+  <audio id="audio_health" src="sound/health.wav" preload>
+  <audio id="audio_junk" src="sound/junk.wav" preload>
+  <audio id="audio_laser" src="sound/laser.wav" preload>
+    
+  
+  <!--JS-->
   <script type="text/javascript" src="js/Engine.js"></script> 
   <script type="text/javascript" src="js/MoveableEntity.js"></script>
   <script type="text/javascript" src="js/Player.js"></script>
@@ -140,6 +148,7 @@
       mouseMoved = true;
     }
 
+
     console.log("Drawing loading screen");
     ctx.beginPath();
     ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
@@ -153,8 +162,14 @@
     ctx.font = "16px Pixel";
     ctx.fillText("Loading...",PX_WIDTH/2-120,PX_HEIGHT/2-16);
     
-
     console.log("Loading assets");
+    //Audio
+    var music = document.getElementById("audio_music1");
+    var audioExplode = document.getElementById("audio_explode");
+    var audioHealth = document.getElementById("audio_health");
+    var audioJunk = document.getElementById("audio_junk");
+    var audioLaser = document.getElementById("audio_laser");
+    
     var loader = new PxLoader();
     var imgStarscape = loader.addImage("img/stars.png");
     var imgShip      = loader.addImage("img/ship.png");
@@ -179,7 +194,17 @@
       new Engine();
     });
     
-    loader.start();
+    //load music first
+    music.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+    }, false);
+    
+    music.addEventListener('canplaythrough', function() { 
+      music.volume = 0.5;
+      music.play();
+      loader.start();
+    }, false);
   </script>
 </body>
 </html>

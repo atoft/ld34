@@ -14,6 +14,9 @@ var Laser = function( startX, startY, angle, isPlayers ) {
   this.lifespan = LASER_LIFETIME;
   
   this.didCollide = false;
+  
+  audioLaser.currentTime = 0;
+  audioLaser.play();
 }
 
 Laser.prototype.update = function() {

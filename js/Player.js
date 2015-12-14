@@ -23,6 +23,8 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function() {
   if(this.health<=0) {
     entities.remove(this);
+    audioExplode.currentTime = 0;
+    audioExplode.play();
     sprites.add(new Sprite(this.posX, this.posY, 4, imgExplode, 6, 4, false, true,
                 function(){gameOver = true;}));
 
@@ -112,8 +114,14 @@ Player.prototype.update = function() {
     
     //TODO: This behaviour should be in the Pickup object
     if(this.collide && element instanceof Pickup) {
-      if(element.pickupType == 0 && this.health < PLAYER_MAXHEALTH) this.health++;
-      else if(element.pickupType == 1) numJunk++;
+      if(element.pickupType == 0 && this.health < PLAYER_MAXHEALTH) {
+        this.health++;
+        audioHealth.play();
+      }
+      else if(element.pickupType == 1) {
+        numJunk++;
+        audioJunk.play();
+      }
       entities.remove(element);
       this.collide = false;
     }
@@ -148,7 +156,8 @@ Player.prototype.damage = function(dmg) {
   if(this.invulnerabilityTimer <=0 ) {
     this.health-=dmg;
     sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
-    
+    audioExplode.currentTime = 0;
+    audioExplode.play();
     this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   }
   

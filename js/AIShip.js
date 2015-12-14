@@ -105,7 +105,8 @@ AIShip.prototype.damage = function(dmg) {
   if(this.invulnerabilityTimer <=0 ) {
     this.health-=dmg;
     sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
-    
+    audioExplode.currentTime = 0;
+    audioExplode.play();
     this.invulnerabilityTimer = AI_INVULNERABLE_TIMEOUT;
   }
   
