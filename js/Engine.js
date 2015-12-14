@@ -22,7 +22,9 @@ var PLAYER_MAXHEALTH = 5;
 var PLAYER_INVULNERABLE_TIMEOUT = 5;
 var PLAYER_ROTSPEED = 5 *2*Math.PI/360;
 
-var AI_MAXSPEED = 0.5;
+
+var NUM_AI = 5;
+var AI_MAXSPEED = 0.25;
 var AI_ACCELERATION = 0.1;
 var AI_ROTSPEED = 5 *2*Math.PI/360;
 var AI_MAXHEALTH = 3;
@@ -50,6 +52,7 @@ var sprites;
 var gameOver;
 var victory;
 var numJunk;
+var numAI = NUM_AI;
 
 
     
@@ -62,7 +65,7 @@ var Engine = function() {
   entities.add( player );
   
   //Randomly generate all the objects in the level
-  for(i=0;i< NUM_ASTEROIDS + NUM_JUNK + NUM_HEALTH;i++) {
+  for(i=0;i< NUM_ASTEROIDS + NUM_JUNK + NUM_HEALTH + NUM_AI;i++) {
     rangeCheck = false;
     while(!rangeCheck) {
       x = Math.random() * WORLD_WIDTH;
@@ -90,17 +93,18 @@ var Engine = function() {
                                0.02*Math.PI/360,  //rot speed
                                1)                 //is space junk
                                ); 
-    else      
+    else if(i< NUM_ASTEROIDS + NUM_JUNK + NUM_HEALTH)            
     entities.add( new Pickup  (x, 
                                y, 
                                0,	          //move speed
                                0,                 //start angle
                                0.02*Math.PI/360,  //rot speed
                                0)                 //is health
-                               );          
+                               ); 
+    else entities.add( new AIShip (x, y, player) );        
   }
   
-  entities.add( new AIShip (5100, 5100, player) );
+  
   
   _draw();
 }
@@ -109,15 +113,16 @@ var Engine = function() {
 /*Screen functions*/           
 function _drawDebugInfo() {
   ctx.font = "16px Pixel";
-  ctx.fillStyle = "#0095dd";
+  ctx.fillStyle = "red";
   ctx.fillText("FPS: "+Math.round(1000/dt)+"     Player: ("+
                Math.round(player.posX)+", "+
-               Math.round(player.posY)+")", 100, 20);
+               Math.round(player.posY)+")", 100, 340);
 }
 function _drawStats() {
   ctx.font = "16px Pixel";
-  ctx.fillStyle = "#ff0000";
-  ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 40);
+  ctx.fillStyle = "#0095dd";
+  ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 20);
+  ctx.fillText("Enemies Detected: "+numAI,100, 40);
 }
 function _drawCursor() {
   ctx.drawImage(imgCrosshair,mouseX-imgCrosshair.width/2,mouseY-imgCrosshair.height/2);
@@ -200,7 +205,7 @@ function _draw() {
   });
   
   //Check for victory
-  if(numJunk == JUNK_NEEDED) victory = true;
+  if(numJunk == JUNK_NEEDED && numAI == 0) victory = true;
   
   //Reposition the camera
   camX = player.posX -PX_WIDTH/2 -player.width/2;
