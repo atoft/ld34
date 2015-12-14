@@ -22,6 +22,10 @@ var PLAYER_MAXHEALTH = 5;
 var PLAYER_INVULNERABLE_TIMEOUT = 5;
 var PLAYER_ROTSPEED = 5 *2*Math.PI/360;
 
+var AI_MAXSPEED = 0.5;
+var AI_ACCELERATION = 0.1;
+var AI_MAXHEALTH = 3;
+
 var PICKUP_SIZE = 40;
 var NUM_JUNK = 20;
 var NUM_HEALTH = 10;
@@ -118,6 +122,8 @@ function _gameOver() {
   if(!lmbPressed) tmpreleased = true;
   if(tmppressed && tmpreleased) {
     gameOver = false;
+    tmppressed = false;
+    tmpreleased = false;
     new Engine();
   }
   else requestAnimationFrame(_gameOver);
