@@ -28,10 +28,24 @@ MoveableEntity.prototype.update = function() {
   this.posY += ySpeed * dt;
   
   //Correct for out of bounds
-  if(this.posX < 0) this.posX = WORLD_WIDTH;
-  else if(this.posX > WORLD_WIDTH) this.posX = 0;
-  if(this.posY < 0) this.posY = WORLD_HEIGHT;
-  else if(this.posY > WORLD_HEIGHT) this.posY = 0; 
+  teleport = false;
+  if(this.posX < 0) {
+    this.posX = WORLD_WIDTH;
+    teleport = true;
+  }
+  else if(this.posX > WORLD_WIDTH) {
+    this.posX = 0;
+    teleport = true;
+  }
+  if(this.posY < 0) {
+    this.posY = WORLD_HEIGHT;
+    teleport = true;
+  }
+  else if(this.posY > WORLD_HEIGHT) {
+    this.posY = 0; 
+    teleport = true;
+  }
+  if(teleport && this instanceof Player) audioTeleport.play();
 }
 
 MoveableEntity.prototype.damage = function(dmg) {

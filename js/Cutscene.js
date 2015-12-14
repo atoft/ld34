@@ -2,7 +2,7 @@ var cs_scrollscale = 1;
 var cs_logoscale = 2;
 var cs_y = 360;
 
-
+var cs_clickTimeout = 0;
 
 function drawCutscene() {
   if(!cutscene) return;
@@ -17,9 +17,7 @@ function drawCutscene() {
                            (PX_HEIGHT-imgLogo.height * cs_logoscale)/2, 
                             imgLogo.width * cs_logoscale,imgLogo.height * cs_logoscale);
     cs_logoscale = cs_logoscale * 0.99;
-    if(lmbPressed) {
-      cutscene = false;
-    }
+
   }
   
   else if(cs_y>-240) {
@@ -30,12 +28,16 @@ function drawCutscene() {
     console.log((PX_WIDTH-imgScroll.width * cs_scrollscale)/2 +","+cs_y);
     ctx.drawImage(imgScroll, (PX_WIDTH-imgScroll.width * cs_scrollscale)/2, 
                            cs_y, imgScroll.width * cs_scrollscale,imgScroll.height * cs_scrollscale);
+    if(lmbPressed) {
+      cs_y = -360;
+    }
           
     
   }
   else {
     ctx.drawImage(imgMenu, 0, 0);
-    if(lmbPressed) {
+    cs_clickTimeout++; //This is very rubbish
+    if(lmbPressed && cs_clickTimeout > 60 ) {
       cutscene = false;
     }
   }

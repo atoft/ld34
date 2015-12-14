@@ -20,8 +20,8 @@
       image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
       image-rendering: pixelated;                 /* Awesome future-browsers       */
       -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
-      
-      width:80%;
+      cursor:none;
+      width:100%;
       height:auto;
     }
   </style>
@@ -35,6 +35,7 @@
   <audio id="audio_health" src="sound/health.wav" preload>
   <audio id="audio_junk" src="sound/junk.wav" preload>
   <audio id="audio_laser" src="sound/laser.wav" preload>
+  <audio id="audio_teleport" src="sound/teleport.wav" preload>
     
   
   <!--JS-->
@@ -142,7 +143,7 @@
       }
     }
     function mouseMoveHandler(e) {
-      scaleX = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)*0.8/PX_WIDTH;
+      scaleX = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)/PX_WIDTH;
       //scaleY = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)/PX_HEIGHT;
     
       mouseX = (e.pageX - canvas.offsetLeft)/scaleX;
@@ -171,6 +172,7 @@
     var audioHealth = document.getElementById("audio_health");
     var audioJunk = document.getElementById("audio_junk");
     var audioLaser = document.getElementById("audio_laser");
+    var audioTeleport = document.getElementById("audio_teleport");
     
     var loader = new PxLoader();
     var imgStarscape = loader.addImage("img/stars.png");
