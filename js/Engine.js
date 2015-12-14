@@ -120,13 +120,34 @@ function _drawDebugInfo() {
   ctx.fillStyle = "red";
   ctx.fillText("FPS: "+Math.round(1000/dt)+"     Player: ("+
                Math.round(player.posX)+", "+
-               Math.round(player.posY)+")", 100, 340);
+               Math.round(player.posY)+")", 100, 320);
 }
 function _drawStats() {
+  
+  //ctx.fillStyle = "#0095dd";
+  //ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 20);
+  
+  
+  ctx.save();
+  ctx.translate(100,20);
+  hpat = ctx.createPattern(iconHealth,"repeat");
+  ctx.fillStyle = hpat;
+  ctx.fillRect(0,0,16*player.health,16);
+  ctx.restore();
+  
+  if(numJunk > 5) jdisp = 5;
+  else jdisp = numJunk;
+  ctx.save();
+  ctx.translate(540-jdisp*16,20);
+  jpat = ctx.createPattern(iconJunk,"repeat");
+  ctx.fillStyle = jpat;
+  ctx.fillRect(0,0,16*jdisp,16);
+  ctx.restore();
+  
+  
   ctx.font = "16px Pixel";
   ctx.fillStyle = "#0095dd";
-  ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 20);
-  ctx.fillText("Enemies Detected: "+numAI,100, 40);
+  ctx.fillText("Enemies Detected: "+numAI,100, 340);
 }
 function _drawCursor() {
   ctx.drawImage(imgCrosshair,mouseX-imgCrosshair.width/2,mouseY-imgCrosshair.height/2);
@@ -243,7 +264,7 @@ function _draw() {
     element.draw();
   });
   
-  _drawDebugInfo();
+  //_drawDebugInfo();
   _drawStats();
   _drawCursor();
   mouseMoved = false; //TODO: Is this the best way to handle this?
