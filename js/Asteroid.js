@@ -48,6 +48,7 @@ Asteroid.prototype.update = function() {
   
   //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
+  this.collisionTest();
 }
 
 Asteroid.prototype.damage = function(dmg) {

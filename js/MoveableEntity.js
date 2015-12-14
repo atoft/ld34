@@ -3,7 +3,7 @@
  */
  
  
-var MoveableEntity = function(posX, posY, width, height, angle, doCollision) {
+var MoveableEntity = function(posX, posY, width, height, angle) {
   this.posX = posX;
   this.posY = posY;
   
@@ -12,9 +12,7 @@ var MoveableEntity = function(posX, posY, width, height, angle, doCollision) {
   
   this.angle = angle;
   this.speed = 0;
-  
-  this.doCollision = doCollision;
-    
+      
   //this.collide = false;
   
 }
@@ -34,6 +32,7 @@ MoveableEntity.prototype.update = function() {
   else if(this.posX > WORLD_WIDTH) this.posX = 0;
   if(this.posY < 0) this.posY = WORLD_HEIGHT;
   else if(this.posY > WORLD_HEIGHT) this.posY = 0; 
+  
 }
 
 MoveableEntity.prototype.damage = function(dmg) {
@@ -44,43 +43,50 @@ MoveableEntity.prototype.draw = function() {
   console.log("Warning: called draw on object without unique draw method.");
 } 
 
-
+//Call this to cause collision effects on other entities
 MoveableEntity.prototype.collisionTest = function() {
-  if(this.didCollide) {
-    entities.remove(this);
-  }
-  for(i=0; i<entities.size();i++) {
+  console.log("collision test");
+  console.log(entities.size());
+  
+  for(x=0; x<entities.size();x++) {
     var element = entities.elementAtIndex(i);
+    if(!(element instanceof Player)) continue;
     if(element instanceof Asteroid) angle = element.driftAngle;
     else angle = element.angle;
-    //Collision of line segment with rectangle, treat as 4 line intersections
-    p0X = element.posX - Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2;
-    p0Y = element.posY - Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2;
+    //Collision of rectangle with rectangle, treat as line intersections
+    elementLines = [element.posX - Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2,
+                    element.posY - Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2,
+                    element.posX - Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2,
+                    element.posY + Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2,
+                    element.posX + Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2,
+                    element.posY + Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2,
+                    element.posX + Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2,
+                    element.posY - Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2];
     
-    p1X = element.posX - Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2;
-    p1Y = element.posY + Math.cos(angle)*element.height/2 + Math.sin(angle)*element.width/2;
+    thisLines =    [this.posX - Math.cos(this.angle)*this.width/2 - Math.sin(this.angle)*this.height/2,
+                    this.posY - Math.cos(this.angle)*this.height/2 + Math.sin(this.angle)*this.width/2,
+                    this.posX - Math.cos(this.angle)*this.width/2 + Math.sin(this.angle)*this.height/2,
+                    this.posY + Math.cos(this.angle)*this.height/2 + Math.sin(this.angle)*this.width/2,
+                    this.posX + Math.cos(this.angle)*this.width/2 + Math.sin(this.angle)*this.height/2,
+                    this.posY + Math.cos(this.angle)*this.height/2 - Math.sin(this.angle)*this.width/2,
+                    this.posX + Math.cos(this.angle)*this.width/2 - Math.sin(this.angle)*this.height/2,
+                    this.posY - Math.cos(this.angle)*this.height/2 - Math.sin(this.angle)*this.width/2];    
     
-    p2X = element.posX + Math.cos(angle)*element.width/2 + Math.sin(angle)*element.height/2;
-    p2Y = element.posY + Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2;
-    
-    p3X = element.posX + Math.cos(angle)*element.width/2 - Math.sin(angle)*element.height/2;
-    p3Y = element.posY - Math.cos(angle)*element.height/2 - Math.sin(angle)*element.width/2;
-    
-    if( intersects(this.startX, this.startY, this.endX, this.endY,
-                   p0X, p0Y, p1X, p1Y) || 
-        intersects(this.startX, this.startY, this.endX, this.endY,
-                   p1X, p1Y, p2X, p2Y) ||
-        intersects(this.startX, this.startY, this.endX, this.endY,
-                   p2X, p2Y, p3X, p3Y) ||
-        intersects(this.startX, this.startY, this.endX, this.endY,
-                   p3X, p3Y, p0X, p0Y) ) {
-      if(element instanceof Player && this.isPlayers) continue;
-      else if(element instanceof AIShip && !this.isPlayers) continue;
-      else {
-        element.damage(1);
-        this.didCollide = true;
-        break;
-      }               
+    console.log("outer loop");
+    var detected = false;
+    for(i=0;i<4;i++) {
+      for(j=0;j<4;j++) {
+        if( intersects(elementLines[i], elementLines[i+1], elementLines[(i+2)%4], elementLines[(i+3)%4],
+                       thisLines[j], thisLines[j+1], thisLines[(j+2)%4], thisLines[(j+3)%4]) ) {
+          detected = true;
+          break;             
+        }
+      }
+    }
+    if(detected) {
+      element.damage(1);
+      this.didCollide = true;
+      break;              
     }
   }
 

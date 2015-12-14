@@ -66,50 +66,7 @@ Player.prototype.update = function() {
   if(this.angle > 2*Math.PI) this.angle -= 2*Math.PI;
   else if (this.angle < 0) this.angle += 2*Math.PI;
   /******End of controls******/
-  
-  
-  //Do collision with other objects
-  //TODO: Use the same method as lasers
-  for(i=0; i<entities.size();i++) {
-    var element = entities.elementAtIndex(i);
-    if(element == this) continue;
-    
-    if((this.posX + this.width/4 >= element.posX - element.width/2)
-        && (this.posX - this.width/4 <= element.posX + element.width/2 )) {
-      if(this.posY + this.height/2 >= element.posY - element.height/2
-         && this.posY + this.height/2 <= element.posY + element.height/2) {
-        if(!this.collide) {   
-          this.collide = true;
-          //this.posY= -this.height/2 + element.posY - element.height/2;
-        }
-      }
-      if(this.posY - this.height/2 <= element.posY + element.height/2 
-         && this.posY - this.height/2 >= element.posY - element.height/2 ) {
-        if(!this.collide) {
-          this.collide = true;
-          //this.posY= this.height/2 + element.posY + element.height/2;
-        }
-      }
-    }
-    
-    if((this.posY + this.height/4 >= element.posY - element.height/2)
-        && (this.posY - this.height/4 <= element.posY + element.height/2 )) {
-      if(this.posX + this.width/2 >= element.posX - element.width/2
-         && this.posX + this.width/2 <= element.posX + element.width/2) {
-        if(!this.collide) {
-          this.collide = true;
-          //this.posX= -this.width/2 + element.posX - element.width/2;
-        }
-      }
-      if(this.posX - this.width/2 <= element.posX + element.width/2 
-         && this.posX - this.width/2 >= element.posX - element.width/2 ) {
-        if(!this.collide) {
-          this.collide = true;
-          //this.posX= this.width/2 + element.posX + element.width/2;
-        }
-      }
-    }
-    
+    /*
     //TODO: This behaviour should be in the Pickup object
     if(this.collide && element instanceof Pickup) {
       if(element.pickupType == 0 && this.health < PLAYER_MAXHEALTH) this.health++;
@@ -118,14 +75,7 @@ Player.prototype.update = function() {
       this.collide = false;
     }
     if(this.collide) break;
-  }
-  if(this.collide && this.invulnerabilityTimer<=0) {
-    this.health--;
-
-    sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
-    
-    this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
-  }
+*/
   if(this.invulnerabilityTimer>0) {
     this.invulnerabilityTimer -= 1/dt;
   }
@@ -144,6 +94,17 @@ Player.prototype.update = function() {
   //Call the parent function to update position
   MoveableEntity.prototype.update.call(this);  
 }
+
+Player.prototype.damage = function(dmg) {
+  if(this.invulnerabilityTimer<=0) {
+    this.health-=dmg;
+
+    sprites.add(new Sprite(this.posX, this.posY, 1, imgExplode, 6, 4, false, true));
+    
+    this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
+  }  
+}
+
 
 Player.prototype.draw = function() {
   ctx.save();
