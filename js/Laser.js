@@ -35,21 +35,6 @@ Laser.prototype.update = function() {
   }
 }
 
-function intersects(p0X, p0Y, p1X, p1Y,   p2X, p2Y, p3X, p3Y) {
-  s1X = p1X - p0X;
-  s1Y = p1Y - p0Y;
-  
-  s2X = p3X - p2X;
-  s2Y = p3Y - p2Y;
-  
-  s = (-s1Y * (p0X - p2X) + s1X * (p0Y - p2Y)) 
-       / (-s2X * s1Y + s1X * s2Y);
-  t = ( s2X * (p0Y - p2Y) - s2Y * (p0X - p2X)) 
-       / (-s2X * s1Y + s1X * s2Y);
-  if (s >= 0 && s <= 1 && t >= 0 && t <= 1) return true;
-  else return false;
-}
-
 Laser.prototype.collisionTest = function() {
   if(this.didCollide) {
     entities.remove(this);
