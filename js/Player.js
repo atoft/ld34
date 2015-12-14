@@ -136,7 +136,8 @@ Player.prototype.update = function() {
   if((spacePressed ||rmbPressed) && this.weaponTimer<=0 ) {
     entities.add(new Laser(this.posX-this.width/2,
                            this.posY-this.height/2, 
-                           this.angle));
+                           this.angle,
+                           true));
     this.weaponTimer = WEAPON_TIMEOUT;
   }
   

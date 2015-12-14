@@ -66,7 +66,6 @@ AIShip.prototype.update = function() {
   if(targetAngle < 0 ) targetAngle+=Math.PI*2;
   if(targetAngle >Math.PI*2) targetAngle -= Math.PI*2;
   
-  console.log("target angle: "+Math.round(targetAngle*360/(Math.PI*2))+" this angle: "+Math.round(this.angle*360/(Math.PI*2)));
   
   if(targetAngle - this.angle > AI_ROTSPEED ||
      targetAngle - this.angle < - AI_ROTSPEED) {
@@ -86,6 +85,7 @@ AIShip.prototype.update = function() {
   
   //Do collision with other objects
   //TODO: Use the same method as lasers
+  /*
   for(i=0; i<entities.size();i++) {
     var element = entities.elementAtIndex(i);
     if(element == this) continue;
@@ -128,6 +128,7 @@ AIShip.prototype.update = function() {
     
     if(this.collide) break;
   }
+  */
   if(this.collide && this.invulnerabilityTimer<=0) {
     //this.health--;
 
@@ -140,6 +141,13 @@ AIShip.prototype.update = function() {
   }
   if(this.weaponTimer > 0) {
     this.weaponTimer -= 1/dt;
+  }
+  if(targetDist < AI_TARGET_SAFEDIST && this.weaponTimer<=0 ) {
+    entities.add(new Laser(this.posX-this.width/2,
+                           this.posY-this.height/2, 
+                           this.angle,
+                           false));
+    this.weaponTimer = AI_WEAPON_TIMEOUT;
   }
   
   //Call the parent function to update position

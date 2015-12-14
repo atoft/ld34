@@ -3,12 +3,13 @@
  * test for collision with Entities.
  */
  
-var Laser = function( startX, startY, angle ) {
+var Laser = function( startX, startY, angle, isPlayers ) {
   this.startX = startX;
   this.startY = startY;
   this.angle = angle;
   this.endX = this.startX + LASER_LENGTH*Math.sin(this.angle);
   this.endY = this.startY - LASER_LENGTH*Math.cos(this.angle);
+  this.isPlayers = isPlayers;
                            
   this.lifespan = LASER_LIFETIME;
   
@@ -29,6 +30,7 @@ Laser.prototype.update = function() {
     this.collisionTest();
   }
   else {
+    console.log("removed laser");
     entities.remove(this);
   }
 }
@@ -77,7 +79,8 @@ Laser.prototype.collisionTest = function() {
                    p2X, p2Y, p3X, p3Y) ||
         intersects(this.startX, this.startY, this.endX, this.endY,
                    p3X, p3Y, p0X, p0Y) ) {
-      if(element instanceof Player) continue; //TODO: Allow for enemy lasers
+      if(element instanceof Player && this.isPlayers) continue;
+      else if(element instanceof AIShip && !this.isPlayers) continue;
       else {
         element.damage(1);
         this.didCollide = true;
@@ -92,7 +95,8 @@ Laser.prototype.draw = function() {
   ctx.beginPath();
   ctx.moveTo(this.startX -camX, this.startY -camY);
   ctx.lineTo(this.endX -camX,   this.endY -camY);
-  ctx.strokeStyle="#00ff00";
+  if(this.isPlayers) ctx.strokeStyle="#00ff00";
+  else ctx.strokeStyle="red";
   ctx.lineWidth = 2;
   ctx.stroke();
 }
