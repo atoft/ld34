@@ -39,7 +39,7 @@ Player.prototype.update = function() {
     this.mouseAngle = Math.atan( (mouseX - canvas.width/2) / -(mouseY - canvas.height/2) );
     if(mouseY > canvas.height/2) this.mouseAngle += Math.PI;
     if(this.mouseAngle < 0) this.mouseAngle += Math.PI*2;
-    console.log(this.mouseAngle);
+
   }
   if(this.usingMouse) {
   if(this.mouseAngle - this.angle > PLAYER_ROTSPEED ||
@@ -117,6 +117,7 @@ Player.prototype.update = function() {
   if(this.collide && this.invulnerabilityTimer<=0) {
     this.health--;
 
+    sprites.add(new Sprite(this.posX, this.posY, imgExplode, 6, 4, false, true));
     
     this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   }

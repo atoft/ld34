@@ -51,17 +51,6 @@ var Engine = function() {
   player = new Player(SPAWN_POSX, SPAWN_POSY, 0.5);
   entities.add( player );
   
-  sprites.add(sprite({
-		context: canvas.getContext("2d"),
-		width: 1000,
-		height: 100,
-		image: imgCoin,
-		numberOfFrames: 10,
-		ticksPerFrame: 4,
-		posX : 100,
-		posY : 100
-	})  );
-
   //Randomly generate all the objects in the level
   for(i=0;i< NUM_ASTEROIDS + NUM_JUNK + NUM_HEALTH;i++) {
     rangeCheck = false;
@@ -100,18 +89,6 @@ var Engine = function() {
                                0)                 //is health
                                );          
   }
-      sprites.add( sprite({
-		context: canvas.getContext("2d"),
-		width: imgExplode.width,
-		height: imgExplode.height,
-		image: imgExplode,
-		numberOfFrames: 6,
-		ticksPerFrame: 4,
-		posX : 100,
-		posY : 100
-	}));
-
-
   _draw();
 }
 
@@ -185,58 +162,6 @@ function _victory() {
   ctx.fillText("...this time.",PX_WIDTH/2-180,PX_HEIGHT/2+50);
   
 }
-
-function sprite (options) {
-  var that = {},
-  frameIndex = 0,
-  tickCount = 0,
-  ticksPerFrame = options.ticksPerFrame || 0,
-  numberOfFrames = options.numberOfFrames || 1;
-		
-  that.context = options.context;
-  that.width = options.width;
-  that.height = options.height;
-  that.posX = options.posX;
-  that.posY = options.posY;
-  that.image = options.image;
-		
-  that.update = function () {
-
-    tickCount += 1;
-
-    if (tickCount > ticksPerFrame) {
-
-      tickCount = 0;
-      // If the current frame index is in range
-      if (frameIndex < numberOfFrames - 1) {	
-        // Go to the next frame
-        frameIndex += 1;
-      } 
-      else {
-        frameIndex = 0;
-      }
-    }
-  };
-  that.draw = function () {
-				  
-  // Draw the animation
-    that.context.drawImage(
-    that.image,
-    frameIndex * that.width / numberOfFrames,
-    0,
-    that.width / numberOfFrames,
-    that.height,
-    that.posX,
-    that.posY,
-    that.width / numberOfFrames,
-    that.height);
-    };
-		
-  return that;
-}
-
-
-
     
 /*Main game*/
 function _draw() {
