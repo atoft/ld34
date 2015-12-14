@@ -10,7 +10,8 @@ function Player(posX, posY, maxSpeed) {
   this.enginesOn = false;
   this.health = PLAYER_MAXHEALTH;
   
-  this.invulnerabilityTimer = 0;
+  //Start invulnerable
+  this.invulnerabilityTimer = PLAYER_INVULNERABLE_TIMEOUT;
   this.weaponTimer = 0;
   
   this.mouseAngle =0;

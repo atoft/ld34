@@ -61,6 +61,7 @@ var cutscene = true;
 var Engine = function() {
   //Initialise game objects
   numJunk = 0;
+  numAI = NUM_AI;
   entities = new buckets.LinkedList();
   sprites = new buckets.LinkedList();
   player = new Player(SPAWN_POSX, SPAWN_POSY, 0.5);
