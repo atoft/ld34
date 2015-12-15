@@ -28,7 +28,7 @@ Asteroid.prototype.update = function() {
     entities.remove(this);
     
     //Create debris from the explosion
-    if(this.type!=0) {
+    if(this.type!=0) { //if not debris
       for(i=0; i<3; i++) {
         entities.add( new Asteroid(this.posX, 
                                  this.posY, 
@@ -39,6 +39,15 @@ Asteroid.prototype.update = function() {
                                  (i-1)*0.1*Math.PI/360,     //rot speed
                                  0 ));                   //is debris
       }
+    }
+    if(Math.random() < ASTEROID_CONTAINS_HEALTH_PROBABILITY) {
+      entities.add( new Pickup  (this.posX, 
+                               this.posY, 
+                               0,	          //move speed
+                               0,                 //start angle
+                               0.02*Math.PI/360,  //rot speed
+                               0)                 //is health
+                               ); 
     }
   }
   
