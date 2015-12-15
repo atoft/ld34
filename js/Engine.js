@@ -40,7 +40,8 @@ var NUM_JUNK = 15;
 var NUM_HEALTH = 15;
 var JUNK_NEEDED = 5;
     
-var PARALLAX_SCALE = 4;
+var PARALLAX_SCALE = 8;
+var PARALLAX_SCALE2 = 4;
 
 //Camera
 var camX = 0;
@@ -241,6 +242,13 @@ function _draw() {
   ctx.save();
   ctx.translate(-camX/PARALLAX_SCALE,-camY/PARALLAX_SCALE);
   ctx.fillRect(camX/PARALLAX_SCALE,camY/PARALLAX_SCALE,PX_WIDTH,PX_HEIGHT);
+  ctx.restore();
+  
+  bg = ctx.createPattern(imgDust,"repeat");
+  ctx.fillStyle = bg;
+  ctx.save();
+  ctx.translate(-camX/PARALLAX_SCALE2,-camY/PARALLAX_SCALE2);
+  ctx.fillRect(camX/PARALLAX_SCALE2,camY/PARALLAX_SCALE2,PX_WIDTH,PX_HEIGHT);
   ctx.restore();
       
   //Draw map edge
