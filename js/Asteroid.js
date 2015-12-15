@@ -26,6 +26,7 @@ Asteroid.prototype.update = function() {
   if(this.health <= 0) {
     console.log("!!!!!!!asteroid destroyed");
     entities.remove(this);
+    numAstDestroyed ++;
     if(!mute) audioAsteroid.play();
     //Create debris from the explosion
     if(this.type!=0) { //if not debris

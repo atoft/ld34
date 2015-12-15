@@ -17,7 +17,7 @@ function drawCutscene() {
                            (PX_HEIGHT-imgLogo.height * cs_logoscale)/2, 
                             imgLogo.width * cs_logoscale,imgLogo.height * cs_logoscale);
     cs_logoscale = cs_logoscale * 0.99;
-
+    lmbClicked = false;
   }
   
   else if(cs_y>-240) {
@@ -28,8 +28,9 @@ function drawCutscene() {
 
     ctx.drawImage(imgScroll, (PX_WIDTH-imgScroll.width * cs_scrollscale)/2, 
                            cs_y, imgScroll.width * cs_scrollscale,imgScroll.height * cs_scrollscale);
-    if(lmbPressed) {
+    if(lmbClicked) {
       cs_y = -360;
+      lmbClicked = false;
     }
           
     
@@ -37,7 +38,7 @@ function drawCutscene() {
   else {
     ctx.drawImage(imgMenu, 0, 0);
     cs_clickTimeout++; //This is very rubbish
-    if(lmbPressed && cs_clickTimeout > 60 ) {
+    if(lmbClicked) {
       cutscene = false;
     }
   }

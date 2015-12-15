@@ -82,6 +82,8 @@
     var upPressed = false;
     var lmbPressed = false;
     var rmbPressed = false;
+    var lmbClicked = false;
+    var rmbClicked = false;
     var mouseX = 0;
     var mouseY = 0;
     var mouseMoved = false;
@@ -101,6 +103,7 @@
     document.addEventListener("mousemove", mouseMoveHandler, false);
     window.addEventListener("mousedown", mouseDownHandler, false);
     window.addEventListener("mouseup", mouseUpHandler, false);
+    window.addEventListener("click", mouseClickHandler, false);
     
     function keyPressHandler(e) {
       if(e.keyCode == 109) {
@@ -150,7 +153,7 @@
       else if(e.button == 2){
         rmbPressed = true;
       }
-    }
+    }    
     function mouseUpHandler(e) {
       if(e.button === 0 || e.button === 1){
         console.log("lmb released");
@@ -161,6 +164,17 @@
         rmbPressed = false;
       }
     }
+    
+    function mouseClickHandler(e) {
+      if(e.button == 0 || e.button == 1){
+        console.log("lmb click");
+        lmbClicked = true;
+      }
+      else if(e.button == 2){
+        rmbClicked = true;
+      }
+    }
+    
     function mouseMoveHandler(e) {
       scaleX = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)/PX_WIDTH;
       //scaleY = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)/PX_HEIGHT;

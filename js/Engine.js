@@ -54,6 +54,7 @@ var sprites;
 var gameOver;
 var victory;
 var numJunk;
+var numAstDestroyed;
 var numAI = NUM_AI;
 
 var cutscene = true;
@@ -63,6 +64,7 @@ var cutscene = true;
 var Engine = function() {
   //Initialise game objects
   numJunk = 0;
+  numAstDestroyed = 0;
   numAI = NUM_AI;
   entities = new buckets.LinkedList();
   sprites = new buckets.LinkedList();
@@ -148,13 +150,10 @@ function _drawCursor() {
   ctx.drawImage(imgCrosshair,mouseX-imgCrosshair.width/2,mouseY-imgCrosshair.height/2);
 }
 
-//TODO: Clean up this up (+ add animation)
-var tmppressed = false;
-var tmpreleased = false;
+
+
 function _gameOver() {
-  if(lmbPressed) tmppressed = true;
-  if(!lmbPressed) tmpreleased = true;
-  if(tmppressed && tmpreleased) {
+  if(lmbClicked) {
     gameOver = false;
     tmppressed = false;
     tmpreleased = false;
@@ -193,14 +192,16 @@ function _victory() {
   ctx.fillStyle = "yellow";
   ctx.font = "16px Pixel";
   ctx.fillText("CONGRATULATIONS",PX_WIDTH/2-180,PX_HEIGHT/2-70);
-  ctx.fillText("You esacaped",PX_WIDTH/2-180,PX_HEIGHT/2-40);
-  ctx.fillText("the Empire!",PX_WIDTH/2-180,PX_HEIGHT/2-10);
-  ctx.fillText("...this time.",PX_WIDTH/2-180,PX_HEIGHT/2+50);
-  
+  ctx.font = "8px Pixel";
+  ctx.fillText("You esacaped the Empire!",PX_WIDTH/2-180,PX_HEIGHT/2-40);
+  ctx.fillText("...this time.",PX_WIDTH/2-180,PX_HEIGHT/2-25);
+  ctx.fillText("Asteroids destroyed: "+numAstDestroyed,PX_WIDTH/2-180,PX_HEIGHT/2-10);
+  ctx.fillText("Enemies destroyed: "+NUM_AI,PX_WIDTH/2-180,PX_HEIGHT/2-10);
 }
     
 /*Main game*/
 function _draw() {
+  lmbClicked = false;
   if(gameOver) _gameOver();
   else if(victory) _victory();
   else requestAnimationFrame(_draw);
