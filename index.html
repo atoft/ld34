@@ -84,6 +84,10 @@
     var mouseX = 0;
     var mouseY = 0;
     var mouseMoved = false;
+    var mPressed = false;
+    
+    var mute = false;
+    var paused = false;
         
     //Timing
     var time;
@@ -92,9 +96,23 @@
     //Input
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
+    document.addEventListener("keypress", keyPressHandler);
     document.addEventListener("mousemove", mouseMoveHandler, false);
     window.addEventListener("mousedown", mouseDownHandler, false);
     window.addEventListener("mouseup", mouseUpHandler, false);
+    
+    function keyPressHandler(e) {
+      if(e.keyCode == 109) {
+        console.log("m pressed");
+        mute = !mute;
+        if(mute) music.pause();
+        if(!mute) music.play();
+      }
+      else if(e.keyCode == 112) {
+        console.log("toggle paused");
+        paused = !paused;
+      }
+    }
     
     function keyDownHandler(e) {
       if(e.keyCode == 39) {
@@ -154,16 +172,11 @@
 
     console.log("Drawing loading screen");
     ctx.beginPath();
-    ctx.rect(PX_WIDTH/2-200,PX_HEIGHT/2-100,400,200);
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = "yellow";
-    ctx.fill();
-    ctx.stroke();
-    ctx.closePath();
+
   
     ctx.fillStyle = "yellow";
-    ctx.font = "16px Pixel";
-    ctx.fillText("Loading...",PX_WIDTH/2-120,PX_HEIGHT/2-16);
+    ctx.font = "18px Pixel";
+    ctx.fillText("Loading...",20,20);
     
     console.log("Loading assets");
     //Audio
@@ -203,8 +216,15 @@
       engine = new Engine();
     });
     
-    //load music first
-
+    //TODO: Refactor to have a function which handles sound playback
+    //to allow for a global mute and volume control
+    
+    //Load music when it's ready
+    music.addEventListener('canplaythrough', function() { 
+      if(!mute) music.play();
+    }, false);
+    music.addEventListener('ended', function() {
+      if(!mute) music.play();});
     loader.start();
   </script>
 </body>

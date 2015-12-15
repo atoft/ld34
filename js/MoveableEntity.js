@@ -45,7 +45,9 @@ MoveableEntity.prototype.update = function() {
     this.posY = 0; 
     teleport = true;
   }
-  if(teleport && this instanceof Player) audioTeleport.play();
+  if(teleport && this instanceof Player) {
+    if(!mute) audioTeleport.play();
+  }
 }
 
 MoveableEntity.prototype.damage = function(dmg) {

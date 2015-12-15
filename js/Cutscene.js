@@ -25,7 +25,7 @@ function drawCutscene() {
     cs_y-=0.4;
     cs_scrollscale -=0.001*cs_scrollscale;
   
-    console.log((PX_WIDTH-imgScroll.width * cs_scrollscale)/2 +","+cs_y);
+
     ctx.drawImage(imgScroll, (PX_WIDTH-imgScroll.width * cs_scrollscale)/2, 
                            cs_y, imgScroll.width * cs_scrollscale,imgScroll.height * cs_scrollscale);
     if(lmbPressed) {

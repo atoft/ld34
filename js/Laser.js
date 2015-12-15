@@ -16,7 +16,7 @@ var Laser = function( startX, startY, angle, isPlayers ) {
   this.didCollide = false;
   
   audioLaser.currentTime = 0;
-  audioLaser.play();
+  if(!mute) audioLaser.play();
 }
 
 Laser.prototype.update = function() {

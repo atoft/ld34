@@ -107,9 +107,6 @@ var Engine = function() {
     else entities.add( new AIShip (x, y, player) );        
   }
   
-  //music.volume = 0.5;
-  //music.play();
-  
   _draw();
 }
 
@@ -123,11 +120,7 @@ function _drawDebugInfo() {
                Math.round(player.posY)+")", 100, 320);
 }
 function _drawStats() {
-  
-  //ctx.fillStyle = "#0095dd";
-  //ctx.fillText("Health: "+player.health+"  Space Junk: "+numJunk+"/"+JUNK_NEEDED,100, 20);
-  
-  
+    
   ctx.save();
   ctx.translate(100,20);
   hpat = ctx.createPattern(iconHealth,"repeat");
@@ -216,6 +209,11 @@ function _draw() {
   time = now; 
 
   if(cutscene) drawCutscene();
+  else if(paused) {
+    ctx.fillStyle = "yellow";
+    ctx.font = "16px Pixel";
+    ctx.fillText("PAUSED",PX_WIDTH/2-48,PX_HEIGHT/2-4);
+  }
   else {    
   //Wipe the screen
   ctx.clearRect(0,0,PX_WIDTH,PX_HEIGHT);
