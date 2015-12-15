@@ -195,15 +195,19 @@ function _victory() {
   ctx.font = "8px Pixel";
   ctx.fillText("You esacaped the Empire!",PX_WIDTH/2-180,PX_HEIGHT/2-40);
   ctx.fillText("...this time.",PX_WIDTH/2-180,PX_HEIGHT/2-25);
-  ctx.fillText("Asteroids destroyed: "+numAstDestroyed,PX_WIDTH/2-180,PX_HEIGHT/2-10);
-  ctx.fillText("Enemies destroyed: "+NUM_AI,PX_WIDTH/2-180,PX_HEIGHT/2-10);
+  ctx.fillText("Asteroids destroyed: "+numAstDestroyed,PX_WIDTH/2-180,PX_HEIGHT/2+5);
+  ctx.fillText("Enemies destroyed: "+NUM_AI,PX_WIDTH/2-180,PX_HEIGHT/2+20);
+  ctx.fillText("Click for credits. ",PX_WIDTH/2-180,PX_HEIGHT/2+60);
+  
+  if(lmbClicked) {
+    ctx.drawImage(imgCredits, 0, 0);
+  }
 }
     
 /*Main game*/
 function _draw() {
-  lmbClicked = false;
-  if(gameOver) _gameOver();
-  else if(victory) _victory();
+  if(gameOver) {lmbClicked = false;_gameOver();}
+  else if(victory) {lmbClicked = false;_victory();}
   else requestAnimationFrame(_draw);
       
   //Calculate the amount, dt, to advance the simulation by
